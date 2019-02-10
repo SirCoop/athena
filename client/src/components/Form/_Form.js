@@ -13,40 +13,22 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
     backgroundColor: '#efefef',
     flexGrow: 1,
     height: '90vh',
-    paddingTop: '2rem',
-  },
-  header: {
-    fontFamily: 'Khula, sans-serif !important',
-    color: '#000',
-    marginTop: '1rem',
+    marginTop: '2rem',
   },
   form: {},
   gridContainer: {
     width: '100%',
     padding: '0px'
   },
-  guide: {
-    textAlign: 'center',
-    marginTop: '10rem',
-    fontSize: '2rem',
-  },
   textField: {
     width: '100%',
-  },
-  button: {
-    margin: theme.spacing.unit,
-  },
-  input: {
-    display: 'none',
-  },
+  }
 });
 
 class Form extends React.Component {
@@ -77,40 +59,37 @@ class Form extends React.Component {
     const { classes, formObj, handleInput } = this.props;
     return (
       <Paper className={classes.root}>
-        <Typography
-          variant="title"
-          align="center"
-          className={classes.header}
-        >
-          -- Athena --
-        </Typography>
         <form className={classes.form}>
           <Grid container spacing={24} className={classes.gridContainer}>
             <Grid item xs={12} sm={1} />
-            <Grid item xs={12} sm={10}>
-              <div className={classes.guide}>
-                <span>Upload a personal photo to get started.</span>
-              </div>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  id="contained-button-file"
-                  multiple
-                  type="file"
-                />
-                <label htmlFor="contained-button-file">
-                <Button variant="contained" color="primary" className={classes.button}>
-                  Upload
-                  <CloudUploadIcon className={classes.rightIcon} />
-                </Button>
-                </label>
-              </Grid>
+            <Grid item xs={12} sm={5}>
+              <TextField
+                label="Test"
+                type="text"
+                name="testInput"
+                className={classes.textField}
+                InputProps={{
+                  value: formObj.testInput,
+                  onChange: handleInput,
+                }}
+                placeholder="Write something"
+              />
+              {/* Test Input */}
+            </Grid>
+
+            <Grid item xs={12} sm={5}>
+              <FormControl className={classes.textField}>
+                <InputLabel htmlFor="testInput2">Test Input 2</InputLabel>
+                <Select
+                  name="testInput2"
+                  value={formObj.testInput2}
+                  onChange={handleInput}
+                >
+                  <MenuItem key={this.generateKey('none')} value="none">Select</MenuItem>
+                  {this.createteTestInput2Options()}
+                </Select>
+              </FormControl>
+              {/* Test Input2 */}
             </Grid>
             <Grid item xs={12} sm={1} />
           </Grid>

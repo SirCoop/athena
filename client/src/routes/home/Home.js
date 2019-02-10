@@ -10,7 +10,12 @@ import {
 import Form from '../../components/Form';
 
 const styles = theme => ({
-  root: {},
+  root: {
+  },
+  gridContainer: {
+    width: '100%',
+    padding: '0px'
+  },
 });
 
 class HomeContainer extends React.Component {
@@ -48,19 +53,19 @@ class HomeContainer extends React.Component {
 
   render() {
     const { formObj } = this.state;
+    const { classes } = this.props;
     return (
-      <div>
-        <Grid container spacing={24}>
-          <Grid item xs={12} sm={1}></Grid>
-          <Grid item xs={12} sm={10}>
-            <Form
-              handleInput={this.handleInput}
-              formObj={formObj}
-            />
-          </Grid>
-          <Grid item xs={12} sm={1}></Grid>
+      <Grid container spacing={24} className={classnames(classes.gridContainer)}>
+        <Grid item xs={12} sm={1} />
+        <Grid item xs={12} sm={10} >
+          <Form
+            handleInput={this.handleInput}
+            formObj={formObj}
+          />
         </Grid>
-      </div>
+        <Grid item xs={12} sm={1} />
+      </Grid>
+        
     );
   }
 }
