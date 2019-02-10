@@ -16,10 +16,13 @@ import {
 
 const styles = theme => ({
   root: {
-    backgroundColor: '#afafaf',
+    backgroundColor: '#efefef',
     flexGrow: 1,
   },
   form: {},
+  textField: {
+    width: '100%',
+  }
 });
 
 class Form extends React.Component {
@@ -31,13 +34,29 @@ class Form extends React.Component {
 
   componentDidMount() {}
 
+  generateKey = index => `${index}_${new Date().getTime()}`;
+
+  createteTestInput2Options = () => {
+    const data = ['1', '2'];
+    const opts = data.map((item, idx) => (
+      <MenuItem
+        key={this.generateKey(idx)}
+        value={item}
+      >
+        {item}
+      </MenuItem>
+    ));
+    return opts.length ? opts : [];
+  }
+
   render() {
     const { classes, formObj, handleInput } = this.props;
     return (
       <Paper className={classes.root}>
         <form className={classes.form}>
           <Grid container spacing={24}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={1} />
+            <Grid item xs={12} sm={5}>
               <TextField
                 label="Test"
                 type="text"
@@ -51,10 +70,26 @@ class Form extends React.Component {
               />
               {/* Test Input */}
             </Grid>
+
+            <Grid item xs={12} sm={5}>
+              <FormControl className={classes.textField}>
+                <InputLabel htmlFor="testInput2">Test Input 2</InputLabel>
+                <Select
+                  name="testInput2"
+                  value={formObj.testInput2}
+                  onChange={handleInput}
+                >
+                  <MenuItem key={this.generateKey('none')} value="none">Select</MenuItem>
+                  {this.createteTestInput2Options()}
+                </Select>
+              </FormControl>
+              {/* Test Input2 */}
+            </Grid>
+            <Grid item xs={12} sm={1} />
           </Grid>
         </form>
       </Paper>
-    )
+    );
   }
 }
 

@@ -3,7 +3,10 @@ import fp from 'lodash/fp';
 import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withStyles } from '@material-ui/core/styles';
+import { 
+  Grid,
+  withStyles,
+} from '@material-ui/core';
 import Form from '../../components/Form';
 
 const styles = theme => ({
@@ -15,7 +18,10 @@ class HomeContainer extends React.Component {
     super(props);
 
     this.state = {
-      formObj: {},
+      formObj: {
+        testInput: '',
+        testInput2: '',
+      },
     };
   }
 
@@ -30,6 +36,8 @@ class HomeContainer extends React.Component {
     console.log('name: ', name);
     console.log('value: ', value);
 
+    const { formObj } = this.state;
+
     this.setState({
       formObj: {
         ...formObj,
@@ -42,12 +50,18 @@ class HomeContainer extends React.Component {
     const { formObj } = this.state;
     return (
       <div>
-        <Form
-          handleInput={this.handleInput}
-          formObj={formObj}
-        />
+        <Grid container spacing={24}>
+          <Grid item xs={12} sm={1}></Grid>
+          <Grid item xs={12} sm={10}>
+            <Form
+              handleInput={this.handleInput}
+              formObj={formObj}
+            />
+          </Grid>
+          <Grid item xs={12} sm={1}></Grid>
+        </Grid>
       </div>
-    )
+    );
   }
 }
 
