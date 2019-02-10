@@ -1,0 +1,7 @@
+node_modules
+
+client/dist/
+
+python/athena_package/imagenet-vgg-verydeep-19.mat
+
+python/athena_package/input_images

@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fafafa; 
+  font-family: 'Khula', sans-serif !important;
+}
+
+.Select-menu-outter {
+  z-index: 999;
+}
