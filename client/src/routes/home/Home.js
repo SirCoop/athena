@@ -14,7 +14,7 @@ const styles = theme => ({
   },
   gridContainer: {
     width: '100%',
-    padding: '0px'
+    padding: '2rem 0px 0px 0px',
   },
 });
 

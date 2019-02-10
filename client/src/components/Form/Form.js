@@ -43,9 +43,16 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit,
+    fontFamily: 'Khula, sans-serif !important',
   },
   input: {
     display: 'none',
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  actionBtnGroup: {
+    marginTop: '1rem',
   },
 });
 
@@ -59,19 +66,6 @@ class Form extends React.Component {
   componentDidMount() {}
 
   generateKey = index => `${index}_${new Date().getTime()}`;
-
-  createteTestInput2Options = () => {
-    const data = ['1', '2'];
-    const opts = data.map((item, idx) => (
-      <MenuItem
-        key={this.generateKey(idx)}
-        value={item}
-      >
-        {item}
-      </MenuItem>
-    ));
-    return opts.length ? opts : [];
-  }
 
   render() {
     const { classes, formObj, handleInput } = this.props;
@@ -96,6 +90,7 @@ class Form extends React.Component {
                 direction="row"
                 justify="center"
                 alignItems="center"
+                className={classes.actionBtnGroup}
               >
                 <input
                   accept="image/*"
