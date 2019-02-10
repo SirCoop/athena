@@ -1,6 +1,10 @@
 {
   "presets": ["@babel/env", "@babel/react"],
-  "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-syntax-dynamic-import"]
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-proposal-class-properties",
+  ]
 }
 
 /* 
@@ -8,4 +12,5 @@
 * @babel/react: converts JSX syntax and strips out type annotations.
 * @babel/plugin-proposal-object-rest-spread: transforms rest properties for object destructuring assignment and spread properties for object literals.
 * @babel/plugin-syntax-dynamic-import: load import dynamically
+* @babel/plugin-proposal-class-properties: allow arrow functions as class properties
 */

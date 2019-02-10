@@ -87,11 +87,11 @@ const links = [
     title: "Home",
     Link: Home,
   },
-  {
-    title: "Settings",
-    to: "/settings",
-    Link: Settings,
-  },
+  // {
+  //   title: "Settings",
+  //   to: "/settings",
+  //   Link: Settings,
+  // },
 ];
 
 const mapLinksToNavLinks = ({ isSidebarOpen }) =>
