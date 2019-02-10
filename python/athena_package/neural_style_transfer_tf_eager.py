@@ -8,20 +8,16 @@ based on the work of:
 https://colab.research.google.com/github/tensorflow/models/blob/master/research/nst_blogpost/4_Neural_Style_Transfer_with_Eager_Execution.ipynb#scrollTo=sElaeNX-4Vnc
 """
 from __future__ import absolute_import, division, print_function
+import sys
+import os
+
+print('Content Image: {}'.format(sys.argv[1]))
+print('Style Image: {}'.format(sys.argv[2]))  
+print('Num Iterations: {}'.format(sys.argv[3]))  
+
 import tensorflow as tf
 tf.enable_eager_execution()
 print('Begin Python')
-
-import sys
-import os
-    
-#import urllib.request
-#data = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/d/d7/Green_Sea_Turtle_grazing_seagrass.jpg", "neural_style_transfer/Green_Sea_Turtle.jpg")
-#data1 = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg", "neural_style_transfer/The_Great_Wave_off_Kanagawa.jpg")
-#data2 = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/b/b4/Vassily_Kandinsky%2C_1913_-_Composition_7.jpg", "neural_style_transfer/Vassily_Kandinsky.jpg")
-#data3 = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/0/00/Tuebingen_Neckarfront.jpg", "neural_style_transfer/Tuebingen_Neckarfront.jpg")
-#data4 = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg", "neural_style_transfer/Pillars_of_creation.jpg")
-#data5 = urllib.request.urlretrieve("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1024px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg", "neural_style_transfer/Starry_Night.jpg")    
 
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -46,8 +42,10 @@ print("Eager execution: {}".format(tf.executing_eagerly()))
 
 # Set up some global values here
 scriptDir = os.path.dirname(__file__)
-content_path = os.path.join(scriptDir, './input_images/green_sea_turtle.jpg')
-style_path = os.path.join(scriptDir, './input_images/The_Great_Wave_off_Kanagawa.jpg')
+#content_path = os.path.join(scriptDir, './input_images/green_sea_turtle.jpg')
+content_path = sys.argv[1]
+# style_path = os.path.join(scriptDir, './input_images/The_Great_Wave_off_Kanagawa.jpg')
+style_path = sys.argv[2]
 
 def load_img(path_to_img):
   max_dim = 512

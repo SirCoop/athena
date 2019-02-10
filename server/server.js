@@ -65,10 +65,19 @@ app.all('*', (request, response) => {
 
 // call neural style transfer algorithm
 const pathToChildProcess = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
+const contentImage = path.resolve(__dirname, '../python/athena_package/input_images/green_sea_turtle.jpg');
+const styleImage = path.resolve(__dirname, '../python/athena_package/input_images/Starry_Night.jpg');
+const numIterations = 4;
+const pythonArgs = [
+  contentImage,
+  styleImage,
+  numIterations,
+];
 let pythonChildProcessOptions = {
+  args: pythonArgs,
   mode: 'text',
   pythonOptions: ['-u'], // get print results in real-time
-  parser: (message) => console.log('PYTHON MESSAGE: ', message),
+  parser: (message) => console.log('PYTHON MESSAGE: ', message), // all print() statements in python are recieved here as messages
   stderrParser: (stderr) => {
     console.log('====== PYTHON ERROR ===========');
     console.log(stderr);
