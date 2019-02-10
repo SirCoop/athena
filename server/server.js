@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import path from 'path';
 
 // Import routes
+import athena from './routes/athena.routes';
 import user from './routes/user.routes';
 import profile from './routes/profile.routes';
 
@@ -57,38 +58,11 @@ app.use(express.static(path.resolve(__dirname, '../client/dist/')));
 // Mount public API routers
 app.use('/api', user);
 app.use('/api', profile);
+app.use('/api/athena', athena);
 
 app.all('*', (request, response) => {
   console.log('Returning a 404 from the catch-all route');
   return response.sendStatus(404);
-});
-
-// call neural style transfer algorithm
-const pathToChildProcess = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
-const contentImage = path.resolve(__dirname, '../python/athena_package/input_images/green_sea_turtle.jpg');
-const styleImage = path.resolve(__dirname, '../python/athena_package/input_images/Starry_Night.jpg');
-const numIterations = 4;
-const pythonArgs = [
-  contentImage,
-  styleImage,
-  numIterations,
-];
-let pythonChildProcessOptions = {
-  args: pythonArgs,
-  mode: 'text',
-  pythonOptions: ['-u'], // get print results in real-time
-  parser: (message) => console.log('PYTHON MESSAGE: ', message), // all print() statements in python are recieved here as messages
-  stderrParser: (stderr) => {
-    console.log('====== PYTHON ERROR ===========');
-    console.log(stderr);
-    console.log('====== END PYTHON ERROR ===========');
-  }
-};
- 
-PythonShell.run(pathToChildProcess, pythonChildProcessOptions, (err, results) => {
-  if (err) throw err;
-  // results is an array consisting of messages collected during execution
-  console.log('results: %j', results);
 });
 
 // error middleware
