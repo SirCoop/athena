@@ -13,8 +13,11 @@ import {
   TextField,
   withStyles,
 } from '@material-ui/core';
+import Upload from 'material-ui-upload/Upload';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Typography from '@material-ui/core/Typography';
+import { DropzoneDialog } from 'material-ui-dropzone';
+
 
 const styles = theme => ({
   root: {
@@ -60,15 +63,39 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      open: false,
+      files: []
+    };
   }
 
   componentDidMount() {}
 
+  handleClose = () => {
+    this.setState({
+        open: false
+    });
+  };
+
+  handleOpen = () => {
+      this.setState({
+          open: true,
+      });
+  };
+
+  handleSave = (Files) => {
+    const { handleFileUpload } = this.props;
+    handleFileUpload(Files);
+    this.setState({
+      open: false,
+    });
+  }
+
   generateKey = index => `${index}_${new Date().getTime()}`;
 
   render() {
-    const { classes, formObj, handleInput } = this.props;
+    const { classes, formObj} = this.props;
+    const { open } = this.state;
     return (
       <Paper className={classes.root}>
         <Typography
@@ -92,19 +119,18 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
               >
-                <input
-                  accept="image/*"
-                  className={classes.input}
-                  id="contained-button-file"
-                  multiple
-                  type="file"
-                />
-                <label htmlFor="contained-button-file">
-                <Button variant="contained" color="primary" className={classes.button}>
-                  Upload
-                  <CloudUploadIcon className={classes.rightIcon} />
+                <Button onClick={this.handleOpen}>
+                  Add Image
                 </Button>
-                </label>
+                <DropzoneDialog
+                    open={open}
+                    onSave={this.handleSave}
+                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                    showPreviews={true}
+                    maxFileSize={5000000}
+                    onClose={this.handleClose}
+                    filesLimit={1}
+                />
               </Grid>
             </Grid>
             <Grid item xs={12} sm={1} />
@@ -118,12 +144,14 @@ class Form extends React.Component {
 Form.defaultProps = {
   classes: PropTypes.shape({}).isRequired,
   formObj: PropTypes.shape({}).isRequired,
+  handleFileUpload: PropTypes.func.isRequired,
   handleInput: PropTypes.func.isRequired,
 };
 
 Form.propTypes = {
   classes: PropTypes.shape({}),
   formObj: PropTypes.shape({}),
+  handleFileUpload: PropTypes.func,
   handleInput: PropTypes.func,
 };
 

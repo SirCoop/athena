@@ -8,6 +8,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import Form from '../../components/Form';
+import athenaService from '../../services/athena.service';
 
 const styles = theme => ({
   root: {
@@ -31,6 +32,11 @@ class HomeContainer extends React.Component {
   }
 
   componentDidMount() {}
+
+  onFileLoad = (files) => {
+    console.log('Files: ', files);
+    athenaService.uploadFiles(files).then(res => console.log('res: ', res));
+  };
 
   handleInput = ({ target }) => {
     const {
@@ -59,6 +65,7 @@ class HomeContainer extends React.Component {
         <Grid item xs={12} sm={1} />
         <Grid item xs={12} sm={10} >
           <Form
+            handleFileUpload={this.onFileLoad}
             handleInput={this.handleInput}
             formObj={formObj}
           />
@@ -74,6 +81,7 @@ const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({});
 
 const ConnectedHomeContainer = fp.compose(
+  withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles),
 )(HomeContainer)
