@@ -1,7 +1,9 @@
 'use strict'
 
+import CONSTANTS from '../constants';
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import morgan from 'morgan';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -28,9 +30,8 @@ const isDevMode = process.env.NODE_ENV === 'development' || false;
 const isProdMode = process.env.NODE_ENV === 'production' || false;
 
 // env variables
-const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/athena';
-
+const PORT = CONSTANTS.express.port;
+const MONGODB_URI = CONSTANTS.mongodb_uri;
 
 /* Mongo isn't needed yet */
 // MongoDB Connection
@@ -48,25 +49,34 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/athena';
 //     });
 // }
 
+/* log all requests to console */
+app.use(morgan('dev'));
+
+/* Point static path to dist */
+app.use(express.static(CONSTANTS.webapp.dist));
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
-app.use(bodyParser.json({ limit: '20mb' }), cors());
+app.use(cors());
+app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 // app.use(require('../routes/auth-router'));
-app.use(express.static(path.resolve(__dirname, '../client/dist/')));
 
 // Mount public API routers
 app.use('/api', user);
 app.use('/api', profile);
 app.use('/api/athena', athena);
 
+/* Catch all other routes and return the index file */
 app.all('*', (request, response) => {
-  console.log('Returning a 404 from the catch-all route');
   return response.sendStatus(404);
 });
 
 // error middleware
 // app.use(require('./error-middleware'));
+
+/* If port is busy, kill node process via powershell */
+// taskkill /F /IM node.exe
 
 export const start = () => {
   app.listen(PORT, () =>{

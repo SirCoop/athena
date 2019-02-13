@@ -35,7 +35,7 @@ class HomeContainer extends React.Component {
 
   onFileLoad = (files) => {
     console.log('Files: ', files);
-    athenaService.uploadFiles(files).then(res => console.log('res: ', res));
+    athenaService.uploadFiles(files);
   };
 
   handleInput = ({ target }) => {

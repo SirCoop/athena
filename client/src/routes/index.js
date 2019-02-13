@@ -8,7 +8,7 @@ const RouterComponent = (props) => {
   return (
     <Switch>
       <Route path={home.path} component={home.Component} />
-      <Redirect exact from="/" to="/home" />
+      <Redirect from="/" to="/home" />
     </Switch>
   );
 };

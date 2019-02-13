@@ -1,22 +1,21 @@
+import path from 'path';
+
 /**
- * Start athena
+ * Upload Image
  * @param req
  * @param res
  * @returns void
  */
-export function saveImages(req, res) {
-  if (!req.body.images) {
-    res.status(403).end();
-  }
+export function saveImage(req, res) {
+  console.log('========CTRL=========');
+  console.log('req: ', req.file);
 
-  console.log('req.body: ', req.body);
+
+  // if (!req.body.image) {
+    res.status(200).end();
+  // }
+
   const artGeneratorConfig = req.body.images;
-  // spawnPythonProcess(artGeneratorConfig);
-
-  // Let's sanitize inputs
-  // newProfile.title = sanitizeHtml(newProfile.title);
-  // newProfile.name = sanitizeHtml(newProfile.name);
-  // newProfile.content = sanitizeHtml(newProfile.content);
 
 }
 
