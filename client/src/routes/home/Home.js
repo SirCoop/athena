@@ -38,6 +38,10 @@ class HomeContainer extends React.Component {
 
   componentDidMount() {}
 
+
+  // need to create success and fail server responses
+  // so that I can set savedPersonalImage = true or false
+  // to allow last upload button enable.
   onPersonalImageUpload = (images) => {
     console.log('Personal Image: ', images);
     athenaService.uploadPersonalImage(images).then(res => {
