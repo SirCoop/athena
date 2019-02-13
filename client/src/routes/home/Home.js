@@ -24,10 +24,15 @@ class HomeContainer extends React.Component {
     super(props);
 
     this.state = {
+      firstNameValid: false,
+      lastNameValid: false,
+      emailValid: false,
       formObj: {
-        testInput: '',
-        testInput2: '',
+        firstName: '',
+        lastName: '',
+        email: '',
       },
+      savedPersonalImage: false,
     };
   }
 
@@ -35,12 +40,16 @@ class HomeContainer extends React.Component {
 
   onPersonalImageUpload = (images) => {
     console.log('Personal Image: ', images);
-    athenaService.uploadPersonalImage(images);
+    athenaService.uploadPersonalImage(images).then(res => {
+      console.log('uploadPersonalImage res: ', res);
+    });
   };
 
   onArtImageUpload = (images) => {
     console.log('Art Image: ', images);
-    athenaService.uploadArtImage(images);
+    athenaService.uploadArtImage(images).then(res => {
+      console.log('uploadArtImage res: ', res);
+    });
   };
 
   handleInput = ({ target }) => {
@@ -50,17 +59,29 @@ class HomeContainer extends React.Component {
     } = target;
 
     const { formObj } = this.state;
+    const formValid = `${name}Valid`;
 
     this.setState({
       formObj: {
         ...formObj,
         [name]: value,
       },
+      [formValid]: true,
     });
   };
 
+  get formValid() {
+    const {
+      firstNameValid,
+      lastNameValid,
+      emailValid,
+    } = this.state;
+
+    return firstNameValid && lastNameValid && emailValid;
+  }
+
   render() {
-    const { formObj } = this.state;
+    const { formObj, savedPersonalImage } = this.state;
     const { classes } = this.props;
     return (
       <Grid container spacing={24} className={classnames(classes.gridContainer)}>
@@ -71,6 +92,8 @@ class HomeContainer extends React.Component {
             handlePersonalImageUpload={this.onPersonalImageUpload}
             handleInput={this.handleInput}
             formObj={formObj}
+            formValid={this.formValid}
+            savedPersonalImage={savedPersonalImage}
           />
         </Grid>
         <Grid item xs={12} sm={1} />

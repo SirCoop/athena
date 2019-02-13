@@ -66,7 +66,6 @@ class Form extends React.Component {
 
     this.state = {
       open: false,
-      files: []
     };
   }
 
@@ -105,7 +104,8 @@ class Form extends React.Component {
   generateKey = index => `${index}_${new Date().getTime()}`;
 
   render() {
-    const { classes, formObj, handleInput} = this.props;
+    const { classes, formObj, handleInput, formValid } = this.props;
+    console.log('formValid: ', formValid);
     const { open } = this.state;
     return (
       <Paper className={classes.root}>
@@ -180,7 +180,7 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
               >
-                <Button onClick={this.handleOpen}>
+                <Button onClick={this.handleOpen} disabled={!formValid}>
                   Add Image
                 </Button>
                 <DropzoneDialog
@@ -205,7 +205,7 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
               >
-                <Button onClick={this.handleOpen}>
+                <Button onClick={this.handleOpen} disabled={!formValid || !savedPersonalImage}>
                   Add Image
                 </Button>
                 <DropzoneDialog
@@ -230,17 +230,21 @@ class Form extends React.Component {
 Form.defaultProps = {
   classes: PropTypes.shape({}).isRequired,
   formObj: PropTypes.shape({}).isRequired,
+  formValid: PropTypes.func.isRequired,
   handleArtImageUpload: PropTypes.func.isRequired,
   handlePersonalImageUpload: PropTypes.func.isRequired,
   handleInput: PropTypes.func.isRequired,
+  savedPersonalImage: PropTypes.bool.isRequired,
 };
 
 Form.propTypes = {
   classes: PropTypes.shape({}),
   formObj: PropTypes.shape({}),
+  formValid: PropTypes.func,
   handleArtImageUpload: PropTypes.func,
   handlePersonalImageUpload: PropTypes.func,
   handleInput: PropTypes.func,
+  savedPersonalImage: PropTypes.bool,
 };
 
 export default withStyles(styles)(Form);
