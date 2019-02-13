@@ -14,9 +14,17 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-router.post('/upload-images', upload.single('image'), function (req, res, next) {
+
+// Content (Personal) Image Upload
+router.post('/upload-images/content', upload.single('content_image'), function (req, res, next) {
   // console.log('+++++++++++++++++++++');
-  return AthenaController.saveImage(req, res);
+  return AthenaController.saveContentImage(req, res);
+});
+
+// Style Image Upload
+router.post('/upload-images/style', upload.single('style_image'), function (req, res, next) {
+  // console.log('+++++++++++++++++++++');
+  return AthenaController.saveStyleImage(req, res);
 });
 
 // Get all ...

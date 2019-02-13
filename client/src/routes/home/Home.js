@@ -33,9 +33,14 @@ class HomeContainer extends React.Component {
 
   componentDidMount() {}
 
-  onFileLoad = (files) => {
-    console.log('Files: ', files);
-    athenaService.uploadFiles(files);
+  onPersonalImageUpload = (images) => {
+    console.log('Personal Image: ', images);
+    athenaService.uploadPersonalImage(images);
+  };
+
+  onArtImageUpload = (images) => {
+    console.log('Art Image: ', images);
+    athenaService.uploadArtImage(images);
   };
 
   handleInput = ({ target }) => {
@@ -43,9 +48,6 @@ class HomeContainer extends React.Component {
       name,
       value,
     } = target;
-
-    console.log('name: ', name);
-    console.log('value: ', value);
 
     const { formObj } = this.state;
 
@@ -65,7 +67,8 @@ class HomeContainer extends React.Component {
         <Grid item xs={12} sm={1} />
         <Grid item xs={12} sm={10} >
           <Form
-            handleFileUpload={this.onFileLoad}
+            handleArtImageUpload={this.onArtImageUpload}
+            handlePersonalImageUpload={this.onPersonalImageUpload}
             handleInput={this.handleInput}
             formObj={formObj}
           />

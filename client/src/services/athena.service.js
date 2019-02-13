@@ -5,21 +5,38 @@ import CONSTANTS from '../constants';
 const { API_ROOT } = CONSTANTS;
 
 const athenaService = {
-  uploadFiles: files => marshallFileUpload(files),
+  uploadPersonalImage: files => marshallPersonalImageUpload(files),
+  uploadArtImage: files => marshallArtImageUpload(files),
 };
 
 export default athenaService;
 
-const marshallFileUpload = (file) => {
-  console.log('service file: ', file);
+const marshallPersonalImageUpload = (files) => {
+  console.log('service files: ', files);
   const formData = new FormData();
-  formData.append('image', file[0]);
+  formData.append('content_image', files[0]);
   const config = {
     headers: {
       'content-type': 'multipart/form-data',
     }
   };
-  axios.post(`${API_ROOT}/athena/upload-images`, formData, config)
+  axios.post(`${API_ROOT}/athena/upload-images/content`, formData, config)
+      .then((response) => {
+          console.log("The file is successfully uploaded");
+      }).catch((error) => {
+  });
+};
+
+const marshallArtImageUpload = (files) => {
+  console.log('service files: ', files);
+  const formData = new FormData();
+  formData.append('style_image', files[0]);
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data',
+    }
+  };
+  axios.post(`${API_ROOT}/athena/upload-images/style`, formData, config)
       .then((response) => {
           console.log("The file is successfully uploaded");
       }).catch((error) => {

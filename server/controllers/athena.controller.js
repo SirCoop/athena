@@ -6,9 +6,23 @@ import path from 'path';
  * @param res
  * @returns void
  */
-export function saveImage(req, res) {
+export function saveContentImage(req, res) {
   console.log('========CTRL=========');
-  console.log('req: ', req.file);
+  const { file } = req;
+  // spawnPythonProcess(file)
+  /*
+  * File Object
+   { 
+      fieldname: 'image',
+      originalname: 'muay-thai-prayer.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: 'E:\\Drive\\athena\\python\\athena_package\\input_images',
+      filename: 'muay-thai-prayer.jpg',
+      path: 'E:\\Drive\\athena\\python\\athena_package\\input_images\\muay-thai-prayer.jpg',
+      size: 615970
+    }
+  */
 
 
   // if (!req.body.image) {
