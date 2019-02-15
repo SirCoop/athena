@@ -32,28 +32,56 @@ class HomeContainer extends React.Component {
         lastName: '',
         email: '',
       },
+      personalImageData: {
+        name: '',
+        size: '',
+        type: '',
+      },
+      styleImageData: {
+        name: '',
+        size: '',
+        type: '',
+      },
       savedPersonalImage: false,
+      savedArtImage: false,
     };
   }
 
   componentDidMount() {}
 
-
   // need to create success and fail server responses
   // so that I can set savedPersonalImage = true or false
   // to allow last upload button enable.
   onPersonalImageUpload = (images) => {
-    console.log('Personal Image: ', images);
-    athenaService.uploadPersonalImage(images).then(res => {
-      console.log('uploadPersonalImage res: ', res);
-    });
+    const { name } = images[0];
+    athenaService.uploadPersonalImage(images)
+      .then(() => {
+        console.log("The file is successfully uploaded");
+        this.setState({
+          savedPersonalImage: true,
+          personalImageData: {
+            name,
+          },
+        });
+      }).catch((error) => {
+        console.log('Error: ', error);
+      });
   };
 
   onArtImageUpload = (images) => {
-    console.log('Art Image: ', images);
-    athenaService.uploadArtImage(images).then(res => {
-      console.log('uploadArtImage res: ', res);
-    });
+    const { name } = images[0];
+    athenaService.uploadArtImage(images)
+      .then(() => {
+        console.log("The file is successfully uploaded");
+        this.setState({
+          savedArtImage: true,
+          styleImageData: {
+            name,
+          },
+        });
+      }).catch((error) => {
+        console.log('Error: ', error);
+      });
   };
 
   handleInput = ({ target }) => {
@@ -85,19 +113,32 @@ class HomeContainer extends React.Component {
   }
 
   render() {
-    const { formObj, savedPersonalImage } = this.state;
+    const {
+      emailValid,
+      firstNameValid,
+      formObj,
+      lastNameValid,
+      personalImageData,
+      savedArtImage,
+      savedPersonalImage,
+      styleImageData,
+    } = this.state;
     const { classes } = this.props;
+    const isValid = firstNameValid && lastNameValid && emailValid;
     return (
       <Grid container spacing={24} className={classnames(classes.gridContainer)}>
         <Grid item xs={12} sm={1} />
         <Grid item xs={12} sm={10} >
           <Form
+            formObj={formObj}
+            formValid={isValid}
             handleArtImageUpload={this.onArtImageUpload}
             handlePersonalImageUpload={this.onPersonalImageUpload}
             handleInput={this.handleInput}
-            formObj={formObj}
-            formValid={this.formValid}
+            personalImageData={personalImageData}
             savedPersonalImage={savedPersonalImage}
+            savedArtImage={savedArtImage}
+            styleImageData={styleImageData}           
           />
         </Grid>
         <Grid item xs={12} sm={1} />

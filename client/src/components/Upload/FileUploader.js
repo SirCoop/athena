@@ -11,39 +11,44 @@ class FileUploader extends React.Component {
         };
     }
  
-    handleClose() {
+    handleClose = () => {
         this.setState({
             open: false
         });
     }
  
-    handleSave(files) {
+    handleSave = (files) => {
+        const { handleUploadSubmit } = this.props;
+        handleUploadSubmit(files);
+
         //Saving files to state for further use and closing Modal.
         this.setState({
             files: files, 
             open: false
         });
-    }
+    };
  
-    handleOpen() {
+    handleOpen = () => {
         this.setState({
             open: true,
         });
-    }
+    };
  
     render() {
+        const { disable, filesLimit, } = this.props;
         return (
             <div>
-                <Button onClick={this.handleOpen.bind(this)}>
+                <Button onClick={this.handleOpen} disabled={disable}>
                   Add Image
                 </Button>
                 <DropzoneDialog
                     open={this.state.open}
-                    onSave={this.handleSave.bind(this)}
+                    onSave={this.handleSave}
                     acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
                     showPreviews={true}
                     maxFileSize={5000000}
-                    onClose={this.handleClose.bind(this)}
+                    onClose={this.handleClose}
+                    filesLimit={filesLimit}
                 />
             </div>
         );

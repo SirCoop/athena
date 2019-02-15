@@ -20,11 +20,7 @@ const marshallPersonalImageUpload = (files) => {
       'content-type': 'multipart/form-data',
     }
   };
-  axios.post(`${API_ROOT}/athena/upload-images/content`, formData, config)
-      .then((response) => {
-          console.log("The file is successfully uploaded");
-      }).catch((error) => {
-  });
+  return axios.post(`${API_ROOT}/athena/upload-images/content`, formData, config);
 };
 
 const marshallArtImageUpload = (files) => {
@@ -36,9 +32,5 @@ const marshallArtImageUpload = (files) => {
       'content-type': 'multipart/form-data',
     }
   };
-  axios.post(`${API_ROOT}/athena/upload-images/style`, formData, config)
-      .then((response) => {
-          console.log("The file is successfully uploaded");
-      }).catch((error) => {
-  });
+  return axios.post(`${API_ROOT}/athena/upload-images/style`, formData, config);
 };

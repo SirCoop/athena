@@ -1,15 +1,8 @@
 import path from 'path';
 
-/**
- * Upload Image
- * @param req
- * @param res
- * @returns void
- */
 export function saveContentImage(req, res) {
-  console.log('========CTRL=========');
+  console.log('========CONTENT=========');
   const { file } = req;
-  // spawnPythonProcess(file)
   /*
   * File Object
    { 
@@ -23,14 +16,21 @@ export function saveContentImage(req, res) {
       size: 615970
     }
   */
-
-
-  // if (!req.body.image) {
+  if (file.filename && file.size > 0) {
     res.status(200).end();
-  // }
+  } else {
+    res.status(500).end();
+  }
+}
 
-  const artGeneratorConfig = req.body.images;
-
+export function saveStyleImage(req, res) {
+  console.log('========STYLE=========');
+  const { file } = req;
+  if (file.filename && file.size > 0) {
+    res.status(200).end();
+  } else {
+    res.status(500).end();
+  }
 }
 
 function spawnPythonProcess(config) {

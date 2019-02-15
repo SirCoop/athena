@@ -7,16 +7,18 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
+  Icon,
   MenuItem,
   Paper,
   Select,
   TextField,
+  Typography,
   withStyles,
 } from '@material-ui/core';
-import Upload from 'material-ui-upload/Upload';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import Typography from '@material-ui/core/Typography';
-import { DropzoneDialog } from 'material-ui-dropzone';
+import Send from '@material-ui/icons/Send';
+// import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+// import { DropzoneDialog } from 'material-ui-dropzone';
+import FileUploader from '../Upload/FileUploader';
 
 
 const styles = theme => ({
@@ -58,33 +60,21 @@ const styles = theme => ({
   actionBtnGroup: {
     marginTop: '1rem',
   },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 class Form extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      open: false,
-    };
   }
 
   componentDidMount() {}
 
-  handleClose = () => {
-    this.setState({
-        open: false
-    });
-  };
-
-  handleOpen = () => {
-      this.setState({
-          open: true,
-      });
-  };
-
   // files is an array regardless of file limit prop on uploader
   handlePersonalImageSave = (file) => {
+    console.log('file: ', file);    
     const { handlePersonalImageUpload } = this.props;
     handlePersonalImageUpload(file);
     this.setState({
@@ -104,13 +94,21 @@ class Form extends React.Component {
   generateKey = index => `${index}_${new Date().getTime()}`;
 
   render() {
-    const { classes, formObj, handleInput, formValid } = this.props;
-    console.log('formValid: ', formValid);
-    const { open } = this.state;
+    const {
+      classes,
+      formObj,
+      handleInput,
+      formValid,
+      savedPersonalImage,
+      savedArtImage,
+      personalImageData,
+      styleImageData,
+    } = this.props;
+    console.log('personalImageData: ', personalImageData);
     return (
       <Paper className={classes.root}>
         <Typography
-          variant="title"
+          variant="h4"
           align="center"
           className={classes.header}
         >
@@ -180,18 +178,16 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
               >
-                <Button onClick={this.handleOpen} disabled={!formValid}>
-                  Add Image
-                </Button>
-                <DropzoneDialog
-                    open={open}
-                    onSave={this.handlePersonalImageSave}
-                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                    showPreviews={true}
-                    maxFileSize={5000000}
-                    onClose={this.handleClose}
-                    filesLimit={1}
+                <FileUploader
+                  disable={!formValid || savedPersonalImage}
+                  filesLimit={1}
+                  handleUploadSubmit={this.handlePersonalImageSave}
                 />
+                <div>
+                  {
+                    personalImageData.name ? personalImageData.name : ''
+                  }
+                </div>
               </Grid>
             </Grid>
               <Grid item xs={12} sm={5}>
@@ -205,21 +201,30 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
               >
-                <Button onClick={this.handleOpen} disabled={!formValid || !savedPersonalImage}>
-                  Add Image
-                </Button>
-                <DropzoneDialog
-                    open={open}
-                    onSave={this.handleArtImageSave}
-                    acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-                    showPreviews={true}
-                    maxFileSize={5000000}
-                    onClose={this.handleClose}
-                    filesLimit={1}
+                <FileUploader
+                  disable={!formValid || !savedPersonalImage || (savedPersonalImage && savedArtImage)}
+                  filesLimit={1}
+                  handleUploadSubmit={this.handleArtImageSave}
                 />
-              </Grid>
+                <div>
+                  {
+                    styleImageData.name ? styleImageData.name : ''
+                  }
+                </div>
+              </Grid>              
             </Grid>
             <Grid item xs={12} sm={1} />
+          </Grid>
+          <Grid container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                className={classes.actionBtnGroup}
+          >
+            <Button variant="contained" color="primary" className={classes.button}>
+              Create                
+              <Send className={classes.rightIcon} />
+              </Button>
           </Grid>
         </form>
       </Paper>
@@ -230,7 +235,7 @@ class Form extends React.Component {
 Form.defaultProps = {
   classes: PropTypes.shape({}).isRequired,
   formObj: PropTypes.shape({}).isRequired,
-  formValid: PropTypes.func.isRequired,
+  formValid: PropTypes.bool.isRequired,
   handleArtImageUpload: PropTypes.func.isRequired,
   handlePersonalImageUpload: PropTypes.func.isRequired,
   handleInput: PropTypes.func.isRequired,
@@ -240,7 +245,7 @@ Form.defaultProps = {
 Form.propTypes = {
   classes: PropTypes.shape({}),
   formObj: PropTypes.shape({}),
-  formValid: PropTypes.func,
+  formValid: PropTypes.bool,
   handleArtImageUpload: PropTypes.func,
   handlePersonalImageUpload: PropTypes.func,
   handleInput: PropTypes.func,
