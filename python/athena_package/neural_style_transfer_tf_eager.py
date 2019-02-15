@@ -405,10 +405,8 @@ def show_results(best_img, content_path, style_path, show_large_final=False):
 
 show_results(best_img, content_path, style_path)
 
-# img_dir = os.path.join(scriptDir, './' + output_path + '/')
-# print('=====OUTPUT PATH===========')
-# print(img_dir)
-
+print('=====OUTPUT PATH===========')
+print(output_path)
 
 if not os.path.exists(output_path):
     os.makedirs(output_path)

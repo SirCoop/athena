@@ -100,17 +100,9 @@ function configurePythonProcess(jobInfo) {
   const baseDirectory = path.resolve(__dirname, '../../python/athena_package');
   const { userDirectory, contentImage, styleImage } = jobInfo;
   // call neural style transfer algorithm
-  // const pathToModel = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
-  // const pathToModel = `${baseDirectory}/neural_style_transfer_tf_eager.py`;
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
-  // const contentImagePath = `${baseDirectory}/user_images/${userDirectory}/content/${contentImage}`;
-  // const styleImagePath = `${baseDirectory}/user_images/${userDirectory}/content/${styleImage}`;
-
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
-
-  // python will reference this with respect to its own script
-  // const outputDirectory = `${userDirectory}/output/`;
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
   const outputFileName = `Final_${contentImage}`;
   const numIterations = 4;
