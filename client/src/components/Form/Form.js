@@ -75,8 +75,8 @@ class Form extends React.Component {
   // files is an array regardless of file limit prop on uploader
   handlePersonalImageSave = (file) => {
     console.log('file: ', file);    
-    const { handlePersonalImageUpload } = this.props;
-    handlePersonalImageUpload(file);
+    const { formObj, handlePersonalImageUpload } = this.props;
+    handlePersonalImageUpload(file, formObj);
     this.setState({
       open: false,
     });
@@ -84,8 +84,8 @@ class Form extends React.Component {
 
   // files is an array regardless of file limit prop on uploader
   handleArtImageSave = (file) => {
-    const { handleArtImageUpload } = this.props;
-    handleArtImageUpload(file);
+    const { formObj, handleArtImageUpload } = this.props;
+    handleArtImageUpload(file, formObj);
     this.setState({
       open: false,
     });
@@ -222,7 +222,7 @@ class Form extends React.Component {
                 className={classes.actionBtnGroup}
           >
             <Button variant="contained" color="primary" className={classes.button}>
-              Create                
+              Go                
               <Send className={classes.rightIcon} />
               </Button>
           </Grid>

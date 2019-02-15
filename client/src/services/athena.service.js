@@ -5,16 +5,19 @@ import CONSTANTS from '../constants';
 const { API_ROOT } = CONSTANTS;
 
 const athenaService = {
-  uploadPersonalImage: files => marshallPersonalImageUpload(files),
-  uploadArtImage: files => marshallArtImageUpload(files),
+  uploadPersonalImage: (files, formObj) => marshallPersonalImageUpload(files, formObj),
+  uploadArtImage: (files, formObj) => marshallArtImageUpload(files, formObj),
 };
 
 export default athenaService;
 
-const marshallPersonalImageUpload = (files) => {
-  console.log('service files: ', files);
+const marshallPersonalImageUpload = (files, formObj) => {
   const formData = new FormData();
   formData.append('content_image', files[0]);
+  formData.append('firstName', formObj.firstName);
+  formData.append('lastName', formObj.lastName);
+  formData.append('email', formObj.email);
+  formData.append('fileName', formObj.fileName);
   const config = {
     headers: {
       'content-type': 'multipart/form-data',
@@ -23,10 +26,13 @@ const marshallPersonalImageUpload = (files) => {
   return axios.post(`${API_ROOT}/athena/upload-images/content`, formData, config);
 };
 
-const marshallArtImageUpload = (files) => {
-  console.log('service files: ', files);
+const marshallArtImageUpload = (files, formObj) => {
   const formData = new FormData();
   formData.append('style_image', files[0]);
+  formData.append('firstName', formObj.firstName);
+  formData.append('lastName', formObj.lastName);
+  formData.append('email', formObj.email);
+  formData.append('fileName', formObj.fileName);
   const config = {
     headers: {
       'content-type': 'multipart/form-data',

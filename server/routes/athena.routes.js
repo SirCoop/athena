@@ -4,13 +4,6 @@ import multer from 'multer';
 import * as AthenaController from '../controllers/athena.controller';
 const router = new Router();
 
-/* 
- Front-End needs to send form data so that the file destination
- can be created dynamically based on user info
-*/
-
-// configuring Multer to use files directory for storing files
-// this is important because later we'll need to access file path
 const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_images/');
 const storage = multer.diskStorage({
   destination: fileLocation,
@@ -21,16 +14,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Content (Personal) Image Upload
-router.post('/upload-images/content', upload.single('content_image'), function (req, res, next) {
-  // console.log('+++++++++++++++++++++');
+router.post('/upload-images/content', upload.single('content_image'), (req, res) => {
+  console.log('++++++++CONTENT ROUTER+++++++++');
+  console.log('req.body: ', req.body);
   return AthenaController.saveContentImage(req, res);
 });
 
 // Style Image Upload
-router.post('/upload-images/style', upload.single('style_image'), function (req, res, next) {
-  // console.log('+++++++++++++++++++++');
+router.post('/upload-images/style', upload.single('style_image'), (req, res) => {
+  console.log('++++++++STYLE ROUTER+++++++++');
+  console.log('req.body: ', req.body);
   return AthenaController.saveStyleImage(req, res);
 });
+
 
 // Get all ...
 // router.route('/athena').get(AthenaController.getSomeCollection);

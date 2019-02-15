@@ -31,6 +31,7 @@ class HomeContainer extends React.Component {
         firstName: '',
         lastName: '',
         email: '',
+        fileName: '',
       },
       personalImageData: {
         name: '',
@@ -49,12 +50,10 @@ class HomeContainer extends React.Component {
 
   componentDidMount() {}
 
-  // need to create success and fail server responses
-  // so that I can set savedPersonalImage = true or false
-  // to allow last upload button enable.
-  onPersonalImageUpload = (images) => {
+  onPersonalImageUpload = (images, formObj) => {
     const { name } = images[0];
-    athenaService.uploadPersonalImage(images)
+    formObj.fileName = name;
+    athenaService.uploadPersonalImage(images, formObj)
       .then(() => {
         console.log("The file is successfully uploaded");
         this.setState({
@@ -68,9 +67,10 @@ class HomeContainer extends React.Component {
       });
   };
 
-  onArtImageUpload = (images) => {
+  onArtImageUpload = (images, formObj) => {
     const { name } = images[0];
-    athenaService.uploadArtImage(images)
+    formObj.fileName = name;
+    athenaService.uploadArtImage(images, formObj)
       .then(() => {
         console.log("The file is successfully uploaded");
         this.setState({

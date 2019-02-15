@@ -1,10 +1,11 @@
 import path from 'path';
+import fs from 'fs-extra';
+import crypto from 'crypto';
 
-export function saveContentImage(req, res) {
-  console.log('========CONTENT=========');
-  const { file } = req;
-  /*
-  * File Object
+const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_images/');
+
+/*
+   File Object
    { 
       fieldname: 'image',
       originalname: 'muay-thai-prayer.jpg',
@@ -15,8 +16,12 @@ export function saveContentImage(req, res) {
       path: 'E:\\Drive\\athena\\python\\athena_package\\input_images\\muay-thai-prayer.jpg',
       size: 615970
     }
-  */
+*/
+export function saveContentImage(req, res) {
+  console.log('========CONTENT CTRL=========');
+  const { file } = req;  
   if (file.filename && file.size > 0) {
+    moveContentImage(req.body);
     res.status(200).end();
   } else {
     res.status(500).end();
@@ -24,14 +29,65 @@ export function saveContentImage(req, res) {
 }
 
 export function saveStyleImage(req, res) {
-  console.log('========STYLE=========');
+  console.log('========STYLE CTRL=========');
   const { file } = req;
   if (file.filename && file.size > 0) {
+    moveStyleImage(req.body);
     res.status(200).end();
   } else {
     res.status(500).end();
   }
 }
+
+/* 
+    TODO: create hash or user id for file directory in
+      case multiple people with same name use the app.
+
+      The below hash will not work because it creates a different hash
+      for both photos with no way to tell unique users.
+
+      // const dirPrefix = `${firstName}_${lastName}`;
+      // const hash = crypto.createHash('md5').update(dirPrefix).digest('hex');
+      // const newDir = `${dirPrefix}_${hash}`;
+*/
+  
+const moveContentImage = (postBody) => {
+  const { firstName, lastName, email, fileName } = postBody;
+  const tmpLocation = `${fileLocation}/${fileName}`;
+  const finalLocation = `${fileLocation}/${firstName}_${lastName}/content/${fileName}`;
+  // Sync:
+  try {
+    fs.copySync(tmpLocation, finalLocation)
+    console.log('success - copy content file!');
+    removeFile(tmpLocation);
+  } catch (err) {
+    console.error(err)
+  }
+};
+
+const moveStyleImage = (postBody) => {
+  const { firstName, lastName, email, fileName } = postBody;
+  const tmpLocation = `${fileLocation}/${fileName}`;
+  const finalLocation = `${fileLocation}/${firstName}_${lastName}/style/${fileName}`;
+  // Sync:
+  try {
+    fs.copySync(tmpLocation, finalLocation)
+    console.log('success - copy style file!');
+    removeFile(tmpLocation);
+  } catch (err) {
+    console.error(err)
+  }
+};
+
+const removeFile = (tmpLocation) => {
+  // remove original file to prevent duplicates
+  fs.remove(tmpLocation, err => {
+    if (err) return console.error(err)
+
+    console.log('successfully removed tmp file!')
+  });
+}
+
 
 function spawnPythonProcess(config) {
   // call neural style transfer algorithm
