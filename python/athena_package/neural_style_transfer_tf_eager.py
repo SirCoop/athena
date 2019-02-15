@@ -411,7 +411,7 @@ print(output_path)
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 
-result.save(output_path + output_filename)
+result.save(os.path.join(output_path, output_filename))
 
 # send data from Python back to node.js
 print('Python is Finished')
