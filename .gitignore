@@ -4,6 +4,6 @@ dist
 
 python/athena_package/imagenet-vgg-verydeep-19.mat
 
-python/athena_package/user_images/
+python/athena_package/user_images
 
 .vscode
