@@ -374,10 +374,10 @@ def run_style_transfer(content_path,
       
   return best_img, best_loss
 
-best_kanagawa_turtle, best_loss = run_style_transfer(content_path, 
+best_img, best_loss = run_style_transfer(content_path, 
                                      style_path, num_iterations=4)
 
-result = Image.fromarray(best_kanagawa_turtle)
+result = Image.fromarray(best_img)
 
 """
 Visualize outputs
@@ -403,13 +403,17 @@ def show_results(best_img, content_path, style_path, show_large_final=False):
     plt.show()
 
 
-show_results(best_kanagawa_turtle, content_path, style_path)
+show_results(best_img, content_path, style_path)
 
-img_dir = os.path.join(scriptDir, './' + output_path + '/')
-if not os.path.exists(img_dir):
-    os.makedirs(img_dir)
+# img_dir = os.path.join(scriptDir, './' + output_path + '/')
+# print('=====OUTPUT PATH===========')
+# print(img_dir)
 
-result.save(img_dir + output_filename)
+
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
+
+result.save(output_path + output_filename)
 
 # send data from Python back to node.js
 print('Python is Finished')

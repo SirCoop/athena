@@ -4,7 +4,7 @@ import multer from 'multer';
 import * as AthenaController from '../controllers/athena.controller';
 const router = new Router();
 
-const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_images/');
+const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_images/');
 const storage = multer.diskStorage({
   destination: fileLocation,
   filename(req, file, cb) {

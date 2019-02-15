@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import { PythonShell } from 'python-shell';
 // import crypto from 'crypto';
 
-const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_images/');
+const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_images/');
 
 /*
    File Object
@@ -12,9 +12,9 @@ const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_
       originalname: 'muay-thai-prayer.jpg',
       encoding: '7bit',
       mimetype: 'image/jpeg',
-      destination: 'E:\\Drive\\athena\\python\\athena_package\\input_images',
+      destination: 'E:\\Drive\\athena\\python\\athena_package\\user_images',
       filename: 'muay-thai-prayer.jpg',
-      path: 'E:\\Drive\\athena\\python\\athena_package\\input_images\\muay-thai-prayer.jpg',
+      path: 'E:\\Drive\\athena\\python\\athena_package\\user_images\\muay-thai-prayer.jpg',
       size: 615970
     }
 */
@@ -101,11 +101,17 @@ function configurePythonProcess(jobInfo) {
   const { userDirectory, contentImage, styleImage } = jobInfo;
   // call neural style transfer algorithm
   // const pathToModel = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
-  const pathToModel = `${baseDirectory}/neural_style_transfer_tf_eager.py`;
-  const contentImagePath = `${baseDirectory}/input_images/${userDirectory}/content/${contentImage}`;
-  const styleImagePath = `${baseDirectory}/input_images/${userDirectory}/content/${styleImage}`;
+  // const pathToModel = `${baseDirectory}/neural_style_transfer_tf_eager.py`;
+  const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
+  // const contentImagePath = `${baseDirectory}/user_images/${userDirectory}/content/${contentImage}`;
+  // const styleImagePath = `${baseDirectory}/user_images/${userDirectory}/content/${styleImage}`;
+
+  const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
+  const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
+
   // python will reference this with respect to its own script
-  const outputDirectory = `${userDirectory}/output/`;
+  // const outputDirectory = `${userDirectory}/output/`;
+  const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
   const outputFileName = `Final_${contentImage}`;
   const numIterations = 4;
   const pythonArgs = [
