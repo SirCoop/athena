@@ -33,6 +33,7 @@ class HomeContainer extends React.Component {
         email: '',
         fileName: '',
       },
+      jobStarted: false,
       personalImageData: {
         name: '',
         size: '',
@@ -83,6 +84,24 @@ class HomeContainer extends React.Component {
         console.log('Error: ', error);
       });
   };
+
+  startAthena = () => {
+    const { formObj: { firstName, lastName }, personalImageData, styleImageData, } = this.state;
+    const jobInfo = { 
+      userDirectory: `${firstName}_${lastName}`,
+      contentImage: personalImageData.name,
+      styleImage: styleImageData.name,
+    };
+    athenaService.startAthenaJob(jobInfo)
+      .then(() => {
+        console.log("Athen started!");
+        this.setState({
+          jobStarted: true,
+        });
+      }).catch((error) => {
+        console.log('Error: ', error);
+      });
+  }
 
   handleInput = ({ target }) => {
     const {
@@ -138,7 +157,8 @@ class HomeContainer extends React.Component {
             personalImageData={personalImageData}
             savedPersonalImage={savedPersonalImage}
             savedArtImage={savedArtImage}
-            styleImageData={styleImageData}           
+            styleImageData={styleImageData}
+            startAthena={this.startAthena}     
           />
         </Grid>
         <Grid item xs={12} sm={1} />

@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
-import crypto from 'crypto';
+import { PythonShell } from 'python-shell';
+// import crypto from 'crypto';
 
 const fileLocation = path.resolve(__dirname, '../../python/athena_package/input_images/');
 
@@ -26,7 +27,7 @@ export function saveContentImage(req, res) {
   } else {
     res.status(500).end();
   }
-}
+};
 
 export function saveStyleImage(req, res) {
   console.log('========STYLE CTRL=========');
@@ -37,7 +38,7 @@ export function saveStyleImage(req, res) {
   } else {
     res.status(500).end();
   }
-}
+};
 
 /* 
     TODO: create hash or user id for file directory in
@@ -86,21 +87,35 @@ const removeFile = (tmpLocation) => {
 
     console.log('successfully removed tmp file!')
   });
-}
+};
 
+export function startAthena(req, res) {
+  console.log('====START ATHENA====');
+  console.log('req.body: ', req.body);
+  const config = configurePythonProcess(req.body);
+  return spawnPythonProcess(config);  
+};
 
-function spawnPythonProcess(config) {
+function configurePythonProcess(jobInfo) {
+  const baseDirectory = path.resolve(__dirname, '../../python/athena_package');
+  const { userDirectory, contentImage, styleImage } = jobInfo;
   // call neural style transfer algorithm
-  const pathToChildProcess = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
-  const contentImage = path.resolve(__dirname, '../python/athena_package/input_images/green_sea_turtle.jpg');
-  const styleImage = path.resolve(__dirname, '../python/athena_package/input_images/Starry_Night.jpg');
+  // const pathToModel = path.resolve(__dirname, '../python/athena_package/neural_style_transfer_tf_eager.py');
+  const pathToModel = `${baseDirectory}/neural_style_transfer_tf_eager.py`;
+  const contentImagePath = `${baseDirectory}/input_images/${userDirectory}/content/${contentImage}`;
+  const styleImagePath = `${baseDirectory}/input_images/${userDirectory}/content/${styleImage}`;
+  // python will reference this with respect to its own script
+  const outputDirectory = `${userDirectory}/output/`;
+  const outputFileName = `Final_${contentImage}`;
   const numIterations = 4;
   const pythonArgs = [
-    contentImage,
-    styleImage,
+    contentImagePath,
+    styleImagePath,
     numIterations,
+    outputDirectory,
+    outputFileName,
   ];
-  let pythonChildProcessOptions = {
+  const pythonChildProcessOptions = {
     args: pythonArgs,
     mode: 'text',
     pythonOptions: ['-u'], // get print results in real-time
@@ -111,10 +126,20 @@ function spawnPythonProcess(config) {
       console.log('====== END PYTHON ERROR ===========');
     }
   };
-  
-  PythonShell.run(pathToChildProcess, pythonChildProcessOptions, (err, results) => {
+
+  const config = {
+    pathToModel: pathToModel,
+    options: pythonChildProcessOptions,
+  };
+
+  return config;
+};
+
+function spawnPythonProcess(config) {
+  const { pathToModel, options } = config;
+  PythonShell.run(pathToModel, options, (err, results) => {
     if (err) throw err;
     // results is an array consisting of messages collected during execution
     console.log('results: %j', results);
   });
-};
+}

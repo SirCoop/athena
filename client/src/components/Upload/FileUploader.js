@@ -46,7 +46,7 @@ class FileUploader extends React.Component {
                     onSave={this.handleSave}
                     acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
                     showPreviews={true}
-                    maxFileSize={5000000}
+                    maxFileSize={50000000}
                     onClose={this.handleClose}
                     filesLimit={filesLimit}
                 />

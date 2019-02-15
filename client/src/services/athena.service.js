@@ -5,11 +5,16 @@ import CONSTANTS from '../constants';
 const { API_ROOT } = CONSTANTS;
 
 const athenaService = {
+  startAthenaJob: (formObj) => startAthenaJob(formObj),
   uploadPersonalImage: (files, formObj) => marshallPersonalImageUpload(files, formObj),
   uploadArtImage: (files, formObj) => marshallArtImageUpload(files, formObj),
 };
 
 export default athenaService;
+
+const startAthenaJob = (jobInfo) => {
+  axios.post(`${API_ROOT}/athena/start`, jobInfo);
+}
 
 const marshallPersonalImageUpload = (files, formObj) => {
   const formData = new FormData();

@@ -13,7 +13,9 @@ import os
 
 print('Content Image: {}'.format(sys.argv[1]))
 print('Style Image: {}'.format(sys.argv[2]))  
-print('Num Iterations: {}'.format(sys.argv[3]))  
+print('Num Iterations: {}'.format(sys.argv[3]))
+print('Output Directory: {}'.format(sys.argv[4]))
+print('Output FileName: {}'.format(sys.argv[5]))
 
 import tensorflow as tf
 tf.enable_eager_execution()
@@ -46,6 +48,10 @@ scriptDir = os.path.dirname(__file__)
 content_path = sys.argv[1]
 # style_path = os.path.join(scriptDir, './input_images/The_Great_Wave_off_Kanagawa.jpg')
 style_path = sys.argv[2]
+# user can define quality by number of iterations
+# quality = sys.argv[3]
+output_path = sys.argv[4]
+output_filename = sys.argv[5]
 
 def load_img(path_to_img):
   max_dim = 512
@@ -399,11 +405,11 @@ def show_results(best_img, content_path, style_path, show_large_final=False):
 
 show_results(best_kanagawa_turtle, content_path, style_path)
 
-img_dir = os.path.join(scriptDir, './output_images/')
+img_dir = os.path.join(scriptDir, './' + output_path + '/')
 if not os.path.exists(img_dir):
     os.makedirs(img_dir)
 
-result.save(img_dir + 'best_kanagawa_turtle.jpg')
+result.save(img_dir + output_filename)
 
 # send data from Python back to node.js
 print('Python is Finished')

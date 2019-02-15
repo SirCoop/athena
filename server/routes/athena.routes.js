@@ -27,6 +27,9 @@ router.post('/upload-images/style', upload.single('style_image'), (req, res) => 
   return AthenaController.saveStyleImage(req, res);
 });
 
+// Start Athen Job
+router.route('/start').post(AthenaController.startAthena);
+
 
 // Get all ...
 // router.route('/athena').get(AthenaController.getSomeCollection);

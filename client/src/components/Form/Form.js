@@ -75,7 +75,7 @@ class Form extends React.Component {
   // files is an array regardless of file limit prop on uploader
   handlePersonalImageSave = (file) => {
     console.log('file: ', file);    
-    const { formObj, handlePersonalImageUpload } = this.props;
+    const { formObj, handlePersonalImageUpload, startAthena } = this.props;
     handlePersonalImageUpload(file, formObj);
     this.setState({
       open: false,
@@ -99,12 +99,12 @@ class Form extends React.Component {
       formObj,
       handleInput,
       formValid,
+      personalImageData,
       savedPersonalImage,
       savedArtImage,
-      personalImageData,
       styleImageData,
+      startAthena,
     } = this.props;
-    console.log('personalImageData: ', personalImageData);
     return (
       <Paper className={classes.root}>
         <Typography
@@ -221,8 +221,14 @@ class Form extends React.Component {
                 alignItems="center"
                 className={classes.actionBtnGroup}
           >
-            <Button variant="contained" color="primary" className={classes.button}>
-              Go                
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              disabled={!savedPersonalImage || !savedArtImage}
+              onClick={startAthena}
+            >
+              Send                
               <Send className={classes.rightIcon} />
               </Button>
           </Grid>
