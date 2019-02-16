@@ -21,7 +21,6 @@ const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_i
     }
 */
 export function saveContentImage(req, res) {
-  console.log('========CONTENT CTRL=========');
   const { file } = req;  
   if (file.filename && file.size > 0) {
     moveContentImage(req.body);
@@ -32,7 +31,6 @@ export function saveContentImage(req, res) {
 };
 
 export function saveStyleImage(req, res) {
-  console.log('========STYLE CTRL=========');
   const { file } = req;
   if (file.filename && file.size > 0) {
     moveStyleImage(req.body);
