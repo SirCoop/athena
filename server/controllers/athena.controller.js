@@ -165,7 +165,7 @@ async function sendEmail(emailDetails) {
     console.log('Successfully Emailed!');
     const { firstName, lastName } = emailDetails;
     const cleanupDirectory = `${firstName}_${lastName}`;
-    await cleanupFiles(cleanupDirectory);
+    cleanupFiles(cleanupDirectory);
   } catch (error) {
     console.log('ERROR - Email: ', error);
   }
@@ -173,12 +173,9 @@ async function sendEmail(emailDetails) {
 
 function cleanupFiles(dir) {
   const cleanupDirectory = path.resolve(`${baseDirectory}`, `./user_images/${dir}`);
-  // With Promises:
-  fs.remove(cleanupDirectory)
-  .then(() => {
+  fs.remove(cleanupDirectory, err => {
+    if (err) return console.error(err)
+  
     console.log(`Successfully removed ${cleanupDirectory}!`);
-  })
-  .catch(err => {
-    console.error(err)
-  })
+  });
 };
