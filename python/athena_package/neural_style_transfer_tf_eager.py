@@ -416,6 +416,7 @@ result.save(os.path.join(output_path, output_filename))
 outputFilePath = os.path.join(output_path, output_filename)
 print('outputFilePath~', outputFilePath)
 sys.stdout.flush()
+sys.exit()
 
 
 

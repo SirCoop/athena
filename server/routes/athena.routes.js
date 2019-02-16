@@ -15,15 +15,11 @@ const upload = multer({ storage });
 
 // Content (Personal) Image Upload
 router.post('/upload-images/content', upload.single('content_image'), (req, res) => {
-  console.log('++++++++CONTENT ROUTER+++++++++');
-  console.log('req.body: ', req.body);
   return AthenaController.saveContentImage(req, res);
 });
 
 // Style Image Upload
 router.post('/upload-images/style', upload.single('style_image'), (req, res) => {
-  console.log('++++++++STYLE ROUTER+++++++++');
-  console.log('req.body: ', req.body);
   return AthenaController.saveStyleImage(req, res);
 });
 

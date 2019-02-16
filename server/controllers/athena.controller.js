@@ -158,7 +158,7 @@ function spawnPythonProcess(config, emailDetails) {
 };
 
 function pythonMessageParser(message) {
-  // console.log('PYTHON MESSAGE: ', message);
+  console.log('PYTHON MESSAGE: ', message);
 };
 
 async function sendEmail(emailDetails) {
@@ -167,7 +167,7 @@ async function sendEmail(emailDetails) {
     console.log('Successfully Emailed!');
     const { firstName, lastName } = emailDetails;
     const cleanupDirectory = `${firstName}_${lastName}`;
-    cleanupFiles(cleanupDirectory);
+    await cleanupFiles(cleanupDirectory);
   } catch (error) {
     console.log('ERROR - Email: ', error);
   }
