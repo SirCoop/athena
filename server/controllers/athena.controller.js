@@ -4,6 +4,7 @@ import { PythonShell } from 'python-shell';
 import  emailerService from '../services/emailer.service';
 // import crypto from 'crypto';
 
+const baseDirectory = path.resolve(__dirname, '../../python/athena_package');
 const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_images/');
 
 /*
@@ -96,7 +97,6 @@ export function startAthena(req, res) {
 };
 
 function configurePythonProcess(jobInfo) {
-  const baseDirectory = path.resolve(__dirname, '../../python/athena_package');
   const { userDirectory, contentImage, styleImage, email, } = jobInfo;
   // call neural style transfer algorithm
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
@@ -152,11 +152,10 @@ function spawnPythonProcess(config, emailDetails) {
   pyshell.end(function (err,code,signal) {
     if (err) throw err;
     console.log('The exit:');
-    console.log('code: ', code);
-    sendEmail(emailDetails);
+    console.log('code: ', code);        
+    sendEmail(emailDetails);    
   });
-
-}
+};
 
 function pythonMessageParser(message) {
   // console.log('PYTHON MESSAGE: ', message);
@@ -166,7 +165,22 @@ async function sendEmail(emailDetails) {
   try {
     await emailerService.sendEmail(emailDetails);
     console.log('Successfully Emailed!');
+    const { firstName, lastName } = emailDetails;
+    const cleanupDirectory = `${firstName}_${lastName}`;
+    cleanupFiles(cleanupDirectory);
   } catch (error) {
     console.log('ERROR - Email: ', error);
   }
-}
+};
+
+function cleanupFiles(dir) {
+  const cleanupDirectory = path.resolve(`${baseDirectory}`, `./user_images/${dir}`);
+  // With Promises:
+  fs.remove(cleanupDirectory)
+  .then(() => {
+    console.log(`Successfully removed ${cleanupDirectory}!`);
+  })
+  .catch(err => {
+    console.error(err)
+  })
+};
