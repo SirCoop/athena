@@ -49,6 +49,7 @@ content_path = sys.argv[1]
 # style_path = os.path.join(scriptDir, './input_images/The_Great_Wave_off_Kanagawa.jpg')
 style_path = sys.argv[2]
 # user can define quality by number of iterations
+number_of_iterations = int(sys.argv[3])
 # quality = sys.argv[3]
 output_path = sys.argv[4]
 output_filename = sys.argv[5]
@@ -289,7 +290,7 @@ Optimization Loop
 
 def run_style_transfer(content_path, 
                        style_path,
-                       num_iterations=4,
+                       num_iterations=200,
                        content_weight=1e3, 
                        style_weight=1e-2): 
   # We don't need to (or want to) train any layers of our model, so we set their
@@ -375,7 +376,7 @@ def run_style_transfer(content_path,
   return best_img, best_loss
 
 best_img, best_loss = run_style_transfer(content_path, 
-                                     style_path, num_iterations=4)
+                                     style_path, num_iterations=number_of_iterations)
 
 result = Image.fromarray(best_img)
 
