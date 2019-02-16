@@ -13,7 +13,7 @@ const athenaService = {
 export default athenaService;
 
 const startAthenaJob = (jobInfo) => {
-  axios.post(`${API_ROOT}/athena/start`, jobInfo);
+  return axios.post(`${API_ROOT}/athena/start`, jobInfo);
 }
 
 const marshallPersonalImageUpload = (files, formObj) => {

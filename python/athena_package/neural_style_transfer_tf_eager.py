@@ -11,11 +11,13 @@ from __future__ import absolute_import, division, print_function
 import sys
 import os
 
-print('Content Image: {}'.format(sys.argv[1]))
-print('Style Image: {}'.format(sys.argv[2]))  
-print('Num Iterations: {}'.format(sys.argv[3]))
-print('Output Directory: {}'.format(sys.argv[4]))
-print('Output FileName: {}'.format(sys.argv[5]))
+# print('Content Image: {}'.format(sys.argv[1]))
+# print('Style Image: {}'.format(sys.argv[2]))  
+# print('Num Iterations: {}'.format(sys.argv[3]))
+# print('Output Directory: {}'.format(sys.argv[4]))
+# print('Output FileName: {}'.format(sys.argv[5]))
+# print('firstName: {}'.format(sys.argv[6]))
+# print('lastName: {}'.format(sys.argv[7]))
 
 import tensorflow as tf
 tf.enable_eager_execution()
@@ -405,16 +407,14 @@ def show_results(best_img, content_path, style_path, show_large_final=False):
 
 show_results(best_img, content_path, style_path)
 
-print('=====OUTPUT PATH===========')
-print(output_path)
-
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 
 result.save(os.path.join(output_path, output_filename))
 
 # send data from Python back to node.js
-print('Python is Finished')
+outputFilePath = os.path.join(output_path, output_filename)
+print('outputFilePath~', outputFilePath)
 sys.stdout.flush()
 
 

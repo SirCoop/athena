@@ -86,15 +86,15 @@ class HomeContainer extends React.Component {
   };
 
   startAthena = () => {
-    const { formObj: { firstName, lastName }, personalImageData, styleImageData, } = this.state;
+    const { formObj: { firstName, lastName, email }, personalImageData, styleImageData, } = this.state;
     const jobInfo = { 
       userDirectory: `${firstName}_${lastName}`,
+      email: email,
       contentImage: personalImageData.name,
       styleImage: styleImageData.name,
     };
     athenaService.startAthenaJob(jobInfo)
       .then(() => {
-        console.log("Athen started!");
         this.setState({
           jobStarted: true,
         });

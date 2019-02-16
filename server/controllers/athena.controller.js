@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 import { PythonShell } from 'python-shell';
+import  emailerService from '../services/emailer.service';
 // import crypto from 'crypto';
 
 const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_images/');
@@ -90,15 +91,13 @@ const removeFile = (tmpLocation) => {
 };
 
 export function startAthena(req, res) {
-  console.log('====START ATHENA====');
-  console.log('req.body: ', req.body);
-  const config = configurePythonProcess(req.body);
-  return spawnPythonProcess(config);  
+  const { config, emailDetails } = configurePythonProcess(req.body);
+  return spawnPythonProcess(config, emailDetails);  
 };
 
 function configurePythonProcess(jobInfo) {
   const baseDirectory = path.resolve(__dirname, '../../python/athena_package');
-  const { userDirectory, contentImage, styleImage } = jobInfo;
+  const { userDirectory, contentImage, styleImage, email, } = jobInfo;
   // call neural style transfer algorithm
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
@@ -117,7 +116,7 @@ function configurePythonProcess(jobInfo) {
     args: pythonArgs,
     mode: 'text',
     pythonOptions: ['-u'], // get print results in real-time
-    parser: (message) => console.log('PYTHON MESSAGE: ', message), // all print() statements in python are recieved here as messages
+    parser: (message) => pythonMessageParser(message), // all print() statements in python are recieved here as messages
     stderrParser: (stderr) => {
       console.log('====== PYTHON ERROR ===========');
       console.log(stderr);
@@ -125,19 +124,49 @@ function configurePythonProcess(jobInfo) {
     }
   };
 
+  const names = userDirectory.split('_');
+  const firstName = names[0];
+  const lastName = names[1];
+
+  const emailDetails = {
+    filePath: path.resolve(outputDirectory, outputFileName),
+    firstName: firstName,
+    lastName: lastName,
+    emailAddress: email,
+  };
+
   const config = {
     pathToModel: pathToModel,
     options: pythonChildProcessOptions,
   };
 
-  return config;
+  return { config: config, emailDetails: emailDetails };
 };
 
-function spawnPythonProcess(config) {
+function spawnPythonProcess(config, emailDetails) {
   const { pathToModel, options } = config;
-  PythonShell.run(pathToModel, options, (err, results) => {
+
+  let pyshell = new PythonShell(pathToModel, options);
+  
+  // end the input stream and allow the process to exit
+  pyshell.end(function (err,code,signal) {
     if (err) throw err;
-    // results is an array consisting of messages collected during execution
-    console.log('results: %j', results);
+    console.log('The exit:');
+    console.log('code: ', code);
+    sendEmail(emailDetails);
   });
+
+}
+
+function pythonMessageParser(message) {
+  // console.log('PYTHON MESSAGE: ', message);
+};
+
+async function sendEmail(emailDetails) {
+  try {
+    await emailerService.sendEmail(emailDetails);
+    console.log('Successfully Emailed!');
+  } catch (error) {
+    console.log('ERROR - Email: ', error);
+  }
 }

@@ -112,7 +112,7 @@ class Form extends React.Component {
           align="center"
           className={classes.header}
         >
-          -- Athena --
+          -- NuvoPastiche --
         </Typography>
         <form className={classes.form}>
           <Grid container spacing={24} className={classes.gridContainer}>
