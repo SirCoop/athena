@@ -404,7 +404,7 @@ def show_results(best_img, content_path, style_path, show_large_final=False):
     plt.show()
 
 
-show_results(best_img, content_path, style_path)
+# show_results(best_img, content_path, style_path)
 
 if not os.path.exists(output_path):
     os.makedirs(output_path)
@@ -413,7 +413,7 @@ result.save(os.path.join(output_path, output_filename))
 
 # send data from Python back to node.js
 outputFilePath = os.path.join(output_path, output_filename)
-print('outputFilePath~', outputFilePath)
+# print('outputFilePath~', outputFilePath)
 sys.stdout.flush()
 sys.exit()
 
