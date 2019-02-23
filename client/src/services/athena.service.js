@@ -13,7 +13,7 @@ const athenaService = {
 export default athenaService;
 
 const startAthenaJob = (jobInfo) => {
-  return axios.post(`${API_ROOT}/athena/start`, jobInfo);
+  return axios.post(`${API_ROOT}/api/athena/start`, jobInfo);
 }
 
 const marshallPersonalImageUpload = (files, formObj) => {
@@ -28,7 +28,7 @@ const marshallPersonalImageUpload = (files, formObj) => {
       'content-type': 'multipart/form-data',
     }
   };
-  return axios.post(`${API_ROOT}/athena/upload-images/content`, formData, config);
+  return axios.post(`${API_ROOT}/api/athena/upload-images/content`, formData, config);
 };
 
 const marshallArtImageUpload = (files, formObj) => {
@@ -43,5 +43,5 @@ const marshallArtImageUpload = (files, formObj) => {
       'content-type': 'multipart/form-data',
     }
   };
-  return axios.post(`${API_ROOT}/athena/upload-images/style`, formData, config);
+  return axios.post(`${API_ROOT}/api/athena/upload-images/style`, formData, config);
 };

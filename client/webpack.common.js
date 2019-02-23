@@ -1,5 +1,6 @@
+const webpack = require('webpack');
 const path = require('path');
-
+const dotenv = require('dotenv');
 const ExtractPlugin = require('extract-text-webpack-plugin');
 const HtmlwebpackPlugin = require('html-webpack-plugin');
 const CleanwebpackPlugin = require('clean-webpack-plugin');
@@ -13,6 +14,10 @@ const HtmlwebpackPluginConfig = new HtmlwebpackPlugin({
 
 const CleanwebpackPluginConfig = new CleanwebpackPlugin([path.resolve(__dirname, '../dist')]);
 
+const env = dotenv.config().parsed;
+const EnvironmentPluginConfig = new webpack.EnvironmentPlugin({...env});
+
+
 module.exports = {
   entry: `${__dirname}/src/index.js`,
   output: {
@@ -23,7 +28,8 @@ module.exports = {
   plugins: [
     HtmlwebpackPluginConfig,
     CleanwebpackPluginConfig,
-    new ExtractPlugin('athena_bundle-[hash].css'),
+    EnvironmentPluginConfig,
+    new ExtractPlugin('athena_bundle-[hash].css'),    
   ],
   module: {
     rules: [

@@ -94,6 +94,7 @@ export function startAthena(req, res) {
   return spawnPythonProcess(config, emailDetails);  
 };
 
+
 function configurePythonProcess(jobInfo) {
   const { userDirectory, contentImage, styleImage, email, } = jobInfo;
   // call neural style transfer algorithm
@@ -101,8 +102,8 @@ function configurePythonProcess(jobInfo) {
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
-  const outputFileName = `Final_${contentImage}`;
-  const numIterations = 500;
+  const numIterations = 10;
+  const outputFileName = `Final_${numIterations}_${contentImage}`;
   const pythonArgs = [
     contentImagePath,
     styleImagePath,
