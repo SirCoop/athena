@@ -11,3 +11,5 @@ python/athena_package/user_images
 server/services/auth.js
 
 ./client/.env
+
+.env
