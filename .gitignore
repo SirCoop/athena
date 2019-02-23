@@ -6,6 +6,8 @@ python/athena_package/imagenet-vgg-verydeep-19.mat
 
 python/athena_package/user_images
 
-.vscode
+./.vscode
 
 server/services/auth.js
+
+./client/.env
