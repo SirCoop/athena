@@ -20,7 +20,7 @@ const EnvironmentPluginConfig = new webpack.EnvironmentPlugin({...env});
 module.exports = {
   entry: `${__dirname}/src/index.js`,
   output: {
-    filename: 'athena_bundle-[hash].js',
+    filename: 'nuvopastiche_bundle-[hash].js',
     path: path.resolve(__dirname, "../dist"),
     publicPath: '/'
   },
@@ -28,7 +28,7 @@ module.exports = {
     HtmlwebpackPluginConfig,
     CleanwebpackPluginConfig,
     EnvironmentPluginConfig,
-    new ExtractPlugin('athena_bundle-[hash].css'),    
+    new ExtractPlugin('nuvopastiche_bundle-[hash].css'),    
   ],
   module: {
     rules: [
