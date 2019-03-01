@@ -17,7 +17,6 @@ const CleanwebpackPluginConfig = new CleanwebpackPlugin([path.resolve(__dirname,
 const env = dotenv.config().parsed;
 const EnvironmentPluginConfig = new webpack.EnvironmentPlugin({...env});
 
-
 module.exports = {
   entry: `${__dirname}/src/index.js`,
   output: {
