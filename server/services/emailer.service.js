@@ -37,5 +37,32 @@ module.exports = {
     };
 
     return transporter.sendMail(mailOptions);
+  },
+  sendErrorEmail: (emailDetails) => {
+    const { errorMessage, firstName, lastName, emailAddress } = emailDetails;
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: auth.user,
+        pass: auth.pass
+      }
+    });
+
+    const mailOptions = {
+      from: 'nuvopastiche@gmail.com',
+      to: emailAddress,
+      subject: 'Message from Athena',
+      text: '',
+      html: `<hr>
+            <h2>${firstName} ${lastName} there was an error creating your pastiche.</h2>
+            <p>${errorMessage}</p>
+            <hr>
+            <p>I apologize for the inconvenience.</p>
+            <p>-- Athena@nuvopastiche </p>
+            `
+    };
+
+    return transporter.sendMail(mailOptions);
   }
 };

@@ -91,7 +91,8 @@ const removeFile = (tmpLocation) => {
 
 export function startAthena(req, res) {
   const { config, emailDetails } = configurePythonProcess(req.body);
-  return spawnPythonProcess(config, emailDetails);  
+  res.send('OK');
+  spawnPythonProcess(config, emailDetails);
 };
 
 
@@ -102,7 +103,7 @@ function configurePythonProcess(jobInfo) {
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
-  const numIterations = 10;
+  const numIterations = 4;
   const outputFileName = `Final_${numIterations}_${contentImage}`;
   const pythonArgs = [
     contentImagePath,
@@ -111,18 +112,7 @@ function configurePythonProcess(jobInfo) {
     outputDirectory,
     outputFileName,
   ];
-  const pythonChildProcessOptions = {
-    args: pythonArgs,
-    mode: 'text',
-    pythonOptions: ['-u'], // get print results in real-time
-    parser: (message) => pythonMessageParser(message), // all print() statements in python are recieved here as messages
-    stderrParser: (stderr) => {
-      console.log('====== PYTHON ERROR ===========');
-      console.log(stderr);
-      console.log('====== END PYTHON ERROR ===========');
-    }
-  };
-
+  
   const names = userDirectory.split('_');
   const firstName = names[0];
   const lastName = names[1];
@@ -132,11 +122,26 @@ function configurePythonProcess(jobInfo) {
     firstName: firstName,
     lastName: lastName,
     emailAddress: email,
+    errorMessage: '',
   };
 
   const config = {
     pathToModel: pathToModel,
     options: pythonChildProcessOptions,
+  };
+
+  const pythonChildProcessOptions = {
+    args: pythonArgs,
+    mode: 'text',
+    pythonOptions: ['-u'], // get print results in real-time
+    parser: (message) => pythonMessageParser(message), // all print() statements in python are recieved here as messages
+    stderrParser: (stderr) => {
+      console.log('====== PYTHON ERROR ===========');
+      console.log(stderr);
+      console.log('====== END PYTHON ERROR ===========');
+      // emailDetails.errorMessage = stderr;
+      // sendErrorEmail(emailDetails);
+    }
   };
 
   return { config: config, emailDetails: emailDetails };
@@ -146,13 +151,24 @@ function spawnPythonProcess(config, emailDetails) {
   const { pathToModel, options } = config;
 
   let pyshell = new PythonShell(pathToModel, options);
+
+  pyshell.on('error', function (err) {
+    // handle stderr (a line of text from stderr)
+    emailDetails.errorMessage = err;
+    sendErrorEmail(emailDetails);
+  });
   
   // end the input stream and allow the process to exit
-  pyshell.end(function (err,code,signal) {
-    if (err) throw err;
+  pyshell.end(function (err,code) {
+    // if (err) {
+    //   emailDetails.errorMessage = err;
+    //   sendErrorEmail(emailDetails);
+    // };
     console.log('The exit:');
-    console.log('code: ', code);        
-    sendEmail(emailDetails);    
+    console.log('code: ', code);
+    if (code === 0)  {
+      sendEmail(emailDetails); 
+    }
   });
 };
 
@@ -163,6 +179,18 @@ function pythonMessageParser(message) {
 async function sendEmail(emailDetails) {
   try {
     await emailerService.sendEmail(emailDetails);
+    console.log('Successfully Emailed!');
+    const { firstName, lastName } = emailDetails;
+    const cleanupDirectory = `${firstName}_${lastName}`;
+    cleanupFiles(cleanupDirectory);
+  } catch (error) {
+    console.log('ERROR - Email: ', error);
+  }
+};
+
+async function sendErrorEmail(emailDetails) {
+  try {
+    await emailerService.sendErrorEmail(emailDetails);
     console.log('Successfully Emailed!');
     const { firstName, lastName } = emailDetails;
     const cleanupDirectory = `${firstName}_${lastName}`;
