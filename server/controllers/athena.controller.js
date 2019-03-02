@@ -76,23 +76,26 @@ const moveStyleImage = (postBody) => {
     console.log('success - copy style file!');
     removeFile(tmpLocation);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 };
 
 const removeFile = (tmpLocation) => {
   // remove original file to prevent duplicates
   fs.remove(tmpLocation, err => {
-    if (err) return console.error(err)
-
-    console.log('successfully removed tmp file!')
+    if (err) return console.error(err);
+    console.log('successfully removed tmp file!');
   });
 };
 
 export function startAthena(req, res) {
-  const { config, emailDetails } = configurePythonProcess(req.body);
-  res.send('OK');
-  spawnPythonProcess(config, emailDetails);
+  try {
+    const { config, emailDetails } = configurePythonProcess(req.body);
+    res.status(200).end();
+    spawnPythonProcess(config, emailDetails);
+  } catch (error) {
+    res.status(500).end();
+  }
 };
 
 
