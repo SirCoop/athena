@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint ./",
-    "test": "jest -i --verbose --coverage --runInBand",
+    "build": "cross-env NODE_ENV=production webpack -p --progress --config webpack.prod.js",
     "start": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=development nodemon index.js --exec babel-node",
     "prod": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=production nodemon index.js --exec babel-node",
     "dboff": "killall mongod",
@@ -55,10 +55,12 @@
     "jest": "^24.0.0",
     "nodemon": "^1.18.9",
     "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.5.1",
     "webpack-dev-server": "^3.1.14",
     "webpack-externals-plugin": "^1.0.0",
     "webpack-hot-middleware": "^2.24.3",
-    "webpack-manifest-plugin": "^2.0.4"
+    "webpack-manifest-plugin": "^2.0.4",
+    "webpack-merge": "^4.2.1"
   }
 }
