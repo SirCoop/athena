@@ -128,11 +128,6 @@ function configurePythonProcess(jobInfo) {
     errorMessage: '',
   };
 
-  const config = {
-    pathToModel: pathToModel,
-    options: pythonChildProcessOptions,
-  };
-
   const pythonChildProcessOptions = {
     args: pythonArgs,
     mode: 'text',
@@ -145,6 +140,11 @@ function configurePythonProcess(jobInfo) {
       // emailDetails.errorMessage = stderr;
       // sendErrorEmail(emailDetails);
     }
+  };
+
+  const config = {
+    pathToModel: pathToModel,
+    options: pythonChildProcessOptions,
   };
 
   return { config: config, emailDetails: emailDetails };
@@ -163,10 +163,6 @@ function spawnPythonProcess(config, emailDetails) {
   
   // end the input stream and allow the process to exit
   pyshell.end(function (err,code) {
-    // if (err) {
-    //   emailDetails.errorMessage = err;
-    //   sendErrorEmail(emailDetails);
-    // };
     console.log('The exit:');
     console.log('code: ', code);
     if (code === 0)  {

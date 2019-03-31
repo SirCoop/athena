@@ -11,11 +11,11 @@ from __future__ import absolute_import, division, print_function
 import sys
 import os
 
-print('Content Image: {}'.format(sys.argv[1]))
-print('Style Image: {}'.format(sys.argv[2]))  
-print('Num Iterations: {}'.format(sys.argv[3]))
-print('Output Directory: {}'.format(sys.argv[4]))
-print('Output FileName: {}'.format(sys.argv[5]))
+# print('Content Image: {}'.format(sys.argv[1]))
+# print('Style Image: {}'.format(sys.argv[2]))  
+# print('Num Iterations: {}'.format(sys.argv[3]))
+# print('Output Directory: {}'.format(sys.argv[4]))
+# print('Output FileName: {}'.format(sys.argv[5]))
 
 import tensorflow as tf
 tf.enable_eager_execution()
