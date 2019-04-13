@@ -40,6 +40,7 @@ export function saveStyleImage(req, res) {
   const userHasExistingImages = checkForExistingImage('style', req.body);
   if (userHasExistingImages) {
     res.status(200).json({message: 'Please wait until your current pastiche has been delivered before creating a new one.'});
+    cleanUnwantedImages();
   }
   if (file.filename && file.size > 0 && !userHasExistingImages) {
     moveStyleImage(req.body);
