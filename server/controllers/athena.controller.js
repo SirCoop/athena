@@ -21,8 +21,13 @@ const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_i
     }
 */
 export function saveContentImage(req, res) {
-  const { file } = req;  
-  if (file.filename && file.size > 0) {
+  const { file } = req;
+  const userHasExistingImages = checkForExistingImage('content', req.body);
+  console.log('userHasExistingImages: ', userHasExistingImages);
+  if (userHasExistingImages.length) {
+    res.status(500).send('You are only allowed one personal photo in queue. Please wait until your current pastiche has been delivered before creating a new one.');
+  }
+  if (file.filename && file.size > 0 && !userHasExistingImages.length) {
     moveContentImage(req.body);
     res.status(200).end();
   } else {
@@ -32,7 +37,11 @@ export function saveContentImage(req, res) {
 
 export function saveStyleImage(req, res) {
   const { file } = req;
-  if (file.filename && file.size > 0) {
+  const userHasExistingImages = checkForExistingImage('style', req.body);
+  if (userHasExistingImages.length) {
+    res.status(500).send('You are only allowed one artistic image in queue. Please wait until your current pastiche has been delivered before creating a new one.');
+  }
+  if (file.filename && file.size > 0 && !userHasExistingImages.length) {
     moveStyleImage(req.body);
     res.status(200).end();
   } else {
@@ -51,6 +60,12 @@ export function saveStyleImage(req, res) {
       // const hash = crypto.createHash('md5').update(dirPrefix).digest('hex');
       // const newDir = `${dirPrefix}_${hash}`;
 */
+
+const checkForExistingImage = (imageDirectory, postBody) => {
+  const { firstName, lastName, } = postBody;
+  const userDir = `${fileLocation}/${firstName}_${lastName}/${imageDirectory}`;
+  return fs.readdirSync(userDir);
+};
   
 const moveContentImage = (postBody) => {
   const { firstName, lastName, email, fileName } = postBody;
@@ -106,7 +121,7 @@ function configurePythonProcess(jobInfo) {
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
-  const numIterations = 500;
+  const numIterations = 4;
   const outputFileName = `Final_${numIterations}_${contentImage}`;
   const pythonArgs = [
     contentImagePath,
