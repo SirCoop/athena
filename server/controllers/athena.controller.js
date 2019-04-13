@@ -23,11 +23,11 @@ const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_i
 export function saveContentImage(req, res) {
   const { file } = req;
   const userHasExistingImages = checkForExistingImage('content', req.body);
-  console.log('userHasExistingImages: ', userHasExistingImages);
-  if (userHasExistingImages.length) {
+  if (userHasExistingImages) {
     res.status(200).json({message: 'Please wait until your current pastiche has been delivered before creating a new one.'});
+    cleanUnwantedImages();
   }
-  if (file.filename && file.size > 0 && !userHasExistingImages.length) {
+  if (file.filename && file.size > 0 && !userHasExistingImages) {
     moveContentImage(req.body);
     res.status(200).end();
   } else {
@@ -38,10 +38,10 @@ export function saveContentImage(req, res) {
 export function saveStyleImage(req, res) {
   const { file } = req;
   const userHasExistingImages = checkForExistingImage('style', req.body);
-  if (userHasExistingImages.length) {
+  if (userHasExistingImages) {
     res.status(200).json({message: 'Please wait until your current pastiche has been delivered before creating a new one.'});
   }
-  if (file.filename && file.size > 0 && !userHasExistingImages.length) {
+  if (file.filename && file.size > 0 && !userHasExistingImages) {
     moveStyleImage(req.body);
     res.status(200).end();
   } else {
@@ -61,10 +61,39 @@ export function saveStyleImage(req, res) {
       // const newDir = `${dirPrefix}_${hash}`;
 */
 
+const cleanUnwantedImages = () => {
+  const contents = fs.readdirSync(fileLocation);
+  contents.forEach((item) => {
+    const path = `${fileLocation}/${item}`;
+    try {
+      const stat = fs.lstatSync(path);
+      if (!stat.isDirectory()) {
+        console.log('Removing: ', item);
+        fs.removeSync(path)
+      }
+    } catch (e) {
+      console.log('ERROR: ', e);
+    }
+  });
+};
+
 const checkForExistingImage = (imageDirectory, postBody) => {
   const { firstName, lastName, } = postBody;
   const userDir = `${fileLocation}/${firstName}_${lastName}/${imageDirectory}`;
-  return fs.readdirSync(userDir);
+  // does dir exist?
+  try {
+    fs.statSync(userDir);
+  } catch(e) {
+    // dir does not exist
+    return false;
+  }
+  // does dir contain files?
+  try {
+    fs.readdirSync(userDir);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
   
 const moveContentImage = (postBody) => {
