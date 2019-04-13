@@ -25,7 +25,7 @@ export function saveContentImage(req, res) {
   const userHasExistingImages = checkForExistingImage('content', req.body);
   console.log('userHasExistingImages: ', userHasExistingImages);
   if (userHasExistingImages.length) {
-    res.status(500).send('You are only allowed one personal photo in queue. Please wait until your current pastiche has been delivered before creating a new one.');
+    res.status(200).json({message: 'You are only allowed one personal photo in queue. Please wait until your current pastiche has been delivered before creating a new one.'});
   }
   if (file.filename && file.size > 0 && !userHasExistingImages.length) {
     moveContentImage(req.body);
@@ -39,7 +39,7 @@ export function saveStyleImage(req, res) {
   const { file } = req;
   const userHasExistingImages = checkForExistingImage('style', req.body);
   if (userHasExistingImages.length) {
-    res.status(500).send('You are only allowed one artistic image in queue. Please wait until your current pastiche has been delivered before creating a new one.');
+    res.status(200).json({message: 'You are only allowed one artistic image in queue. Please wait until your current pastiche has been delivered before creating a new one.'});
   }
   if (file.filename && file.size > 0 && !userHasExistingImages.length) {
     moveStyleImage(req.body);
