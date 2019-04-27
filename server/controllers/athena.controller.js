@@ -151,7 +151,7 @@ function configurePythonProcess(jobInfo) {
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
-  const numIterations = 400;
+  const numIterations = 300;
   const outputFileName = `Final_${numIterations}_${contentImage}`;
   const pythonArgs = [
     contentImagePath,
