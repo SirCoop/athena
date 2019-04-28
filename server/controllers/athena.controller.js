@@ -145,13 +145,16 @@ export function startAthena(req, res) {
 
 
 function configurePythonProcess(jobInfo) {
-  const { userDirectory, contentImage, styleImage, email, } = jobInfo;
+  const { userDirectory, contentImage, styleImage, email, intensity } = jobInfo;
+  // intensity range: 1-100 => max iterations = 400;
+  const iterations = Math.round(intensity * 4);
+  console.log('Num Iterations = ', iterations);
   // call neural style transfer algorithm
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
   const contentImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/content/${contentImage}`);
   const styleImagePath = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/style/${styleImage}`);
   const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output/`);
-  const numIterations = 300;
+  const numIterations = iterations;
   const outputFileName = `Final_${numIterations}_${contentImage}`;
   const pythonArgs = [
     contentImagePath,
