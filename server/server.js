@@ -82,12 +82,12 @@ app.all('*', (request, response) => {
 
 export const start = () => {
   app.listen(PORT, () =>{
-    console.log(`Listening on port: ${PORT}`)
-  })
-}
+    console.log(`Listening on port: ${PORT}`);
+  });
+};
 
 export const stop = () => {
   app.close(PORT, () => {
-    console.log(`Shut down on port: ${PORT}`)
-  })
-}
+    console.log(`Shut down on port: ${PORT}`);
+  });
+};
