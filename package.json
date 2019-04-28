@@ -10,7 +10,8 @@
     "prod": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=production nodemon index.js --exec babel-node",
     "dboff": "killall mongod",
     "watch": "nodemon index.js",
-    "dbon": "mkdir -p ./db && mongod --dbpath ./db"
+    "dbon": "mkdir -p ./db && mongod --dbpath ./db",
+    "killNode": "taskkill /F /IM node.exe"
   },
   "keywords": [],
   "author": "Gary Michael Cooper",
