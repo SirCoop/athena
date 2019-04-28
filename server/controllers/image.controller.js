@@ -1,22 +1,60 @@
+import fs from 'fs-extra';
+import path from 'path';
 import Image from '../models/image';
 import cuid from 'cuid';
 import slug from 'limax';
 import sanitizeHtml from 'sanitize-html';
+import ImageService from '../services/image.service';
 
 /**
- * Get all Images
+ * Get Carousel Images
  * @param req
  * @param res
  * @returns void
  */
-export function getImages(req, res) {
-  Image.find().sort('-dateAdded').exec((err, users) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ users });
+export async function getCarouselImageUrls(req, res) {
+  const directory = path.resolve(__dirname, '../public/carousel');
+  const URI = `api/images/carousel`;
+  try {
+    const files = await ImageService.getCarouselImageUrls(directory);
+    /* api file paths */
+    const filePaths = files.map(file => {
+      const name = file.split('.')[0];
+      return {
+        src: `${URI}/${file}`,
+        name
+      };
+    });
+    res.send({ data: filePaths });
+  } catch (error) {
+    res.send(error);
+  }
+}
+
+export function getCarouselImage(req, res) {
+  const { params: { name }} = req;
+  const imagePath = path.join(__dirname, `../public/carousel/${name}`);
+
+  const mime = {
+    gif: 'image/gif',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+  };
+
+  const type = mime[path.extname(name).slice(1)] || 'text/plain';
+  const s = fs.createReadStream(imagePath);
+  
+  s.on('open', function () {
+      res.set('Content-Type', type);
+      s.pipe(res);
+  });
+  s.on('error', function () {
+      res.set('Content-Type', 'text/plain');
+      res.status(404).end('Not found');
   });
 }
+           
 
 /**
  * Save a image

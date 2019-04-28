@@ -13,6 +13,7 @@ import path from 'path';
 import athena from './routes/athena.routes';
 import user from './routes/user.routes';
 import profile from './routes/profile.routes';
+import image from './routes/image.routes';
 
 // Import mock data
 import createMockUsers from './__mocks__/user.mock';
@@ -66,6 +67,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use('/api', user);
 app.use('/api', profile);
 app.use('/api/athena', athena);
+app.use('/api/images', image);
 
 /* Catch all other routes and return the index file */
 app.all('*', (request, response) => {
