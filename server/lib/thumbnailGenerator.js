@@ -1,14 +1,15 @@
+import path from 'path';
+import fs from 'fs-extra';
 import { thumb } from 'node-thumbnail';
 
 const ThumbnailGenerator = {
   create: (filePath, outputDirectory) => createThumbnail(filePath, outputDirectory),
-  remove: () => deleteThumbnail(),
+  remove: (filePath, thumbnailDirectory) => deleteThumbnail(filePath, thumbnailDirectory),
 };
 
 export default ThumbnailGenerator;
 
 const createThumbnail = (filePath, outputDirectory) => {
-  console.log('make thumbnail for %s', filePath);
   const config = {
     source: `${filePath}`, // could be a filename: dest/path/image.jpg
     destination: `${outputDirectory}`,
@@ -29,12 +30,18 @@ const createThumbnail = (filePath, outputDirectory) => {
     };
 
     return thumb(config).then(() => {
-      console.log('Success');
+      console.log('Created thumbnail.');
     }).catch((e) => {
       console.log('Error', e.toString());
     });
 };
 
-const deleteThumbnail = (filePath) => {
-  return console.log('delete thumbnail for %s', filePath);
+const deleteThumbnail = (filePath, thumbnailDirectory) => {
+  // E:\Drive\nuvopastiche_api\server\public\carousel\Pastiche.JPG
+  const name = filePath.split('.')[0].split('\\').pop();
+  const ext = filePath.split('.').pop();
+  const fileName = `${name}_thumb.${ext}`;
+  const thumbnail = path.resolve(thumbnailDirectory, fileName);
+  console.log('delete thumbnail %s', fileName);
+  fs.remove(`${thumbnail}`)
 };
