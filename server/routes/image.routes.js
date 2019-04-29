@@ -9,4 +9,9 @@ router.route('/carousel').get(ImageController.getCarouselImageUrls);
 // Get one image by name
 router.route('/carousel/:name').get(ImageController.getCarouselImage);
 
+//Get all image urls
+router.route('/help').get(ImageController.getHelpImageUrls);
+// Get one image by name
+router.route('/help/:name').get(ImageController.getHelpImage);
+
 export default router;

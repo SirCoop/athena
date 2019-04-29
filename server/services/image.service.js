@@ -6,8 +6,7 @@ const readdir = util.promisify(fs.readdir);
 // const readfile = util.promisify(fs.readFile);
 
 module.exports = {
-
-  getCarouselImageUrls: (folder) => readdir(folder)
-
+  getCarouselImageUrls: (folder) => readdir(folder),
+  getHelpImageUrls: (folder) => readdir(folder)
 };
 

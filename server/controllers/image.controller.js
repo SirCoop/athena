@@ -54,6 +54,55 @@ export function getCarouselImage(req, res) {
       res.status(404).end('Not found');
   });
 }
+
+/**
+ * Get Carousel Images
+ * @param req
+ * @param res
+ * @returns void
+ */
+export async function getHelpImageUrls(req, res) {
+  const directory = path.resolve(__dirname, '../public/help');
+  const URI = `api/images/help`;
+  try {
+    const files = await ImageService.getHelpImageUrls(directory);
+    /* api file paths */
+    const filePaths = files.map(file => {
+      const name = file.split('.')[0];
+      return {
+        src: `${URI}/${file}`,
+        name
+      };
+    });
+    res.send({ data: filePaths });
+  } catch (error) {
+    res.send(error);
+  }
+}
+
+export function getHelpImage(req, res) {
+  const { params: { name }} = req;
+  const imagePath = path.join(__dirname, `../public/help/${name}`);
+
+  const mime = {
+    gif: 'image/gif',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+  };
+
+  const type = mime[path.extname(name).slice(1)] || 'text/plain';
+  const s = fs.createReadStream(imagePath);
+  
+  s.on('open', function () {
+      res.set('Content-Type', type);
+      s.pipe(res);
+  });
+  s.on('error', function () {
+      res.set('Content-Type', 'text/plain');
+      res.status(404).end('Not found');
+  });
+}
            
 
 /**
