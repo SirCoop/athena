@@ -67,12 +67,30 @@ export async function getHelpImageUrls(req, res) {
   try {
     const files = await ImageService.getHelpImageUrls(directory);
     /* api file paths */
-    const filePaths = files.map(file => {
+    const filePaths = files.map((file, idx) => {
       const name = file.split('.')[0];
-      return {
+      const newFile = {
         src: `${URI}/${file}`,
-        name
+        name,
+        step: idx + 1,
+        stepLabel: '',
       };
+
+      switch(idx) {
+        case 0:
+          newFile.stepLabel = 'Upload a personal photo.';
+          break;
+        case 1:
+          newFile.stepLabel = 'Upload your favorite art.';
+          break;
+        case 2:
+          newFile.stepLabel = 'Send and wait for pastiche.';
+          break;
+        default:
+          break;
+      }
+
+      return newFile;
     });
     res.send({ data: filePaths });
   } catch (error) {

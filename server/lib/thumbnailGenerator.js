@@ -17,7 +17,7 @@ const createThumbnail = (filePath, outputDirectory) => {
     suffix: '_thumb',
     digest: false,
     //hashingType: 'sha1', // 'sha1', 'md5', 'sha256', 'sha512'
-    width: '300px',
+    width: '100px',
     // concurrency: 2,
     quiet: true, // if set to 'true', console.log status messages will be supressed
     overwrite: false,
