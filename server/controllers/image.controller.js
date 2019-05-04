@@ -73,18 +73,18 @@ export async function getHelpImageUrls(req, res) {
         src: `${URI}/${file}`,
         name,
         step: idx + 1,
-        stepLabel: '',
+        header: '',
       };
 
       switch(idx) {
         case 0:
-          newFile.stepLabel = 'Upload a personal photo.';
+          newFile.header = `${newFile.step}) Upload a personal photo.`;
           break;
         case 1:
-          newFile.stepLabel = 'Upload your favorite art.';
+          newFile.header = `${newFile.step}) Upload your favorite art.`;
           break;
         case 2:
-          newFile.stepLabel = 'Send and wait for pastiche.';
+          newFile.header = `${newFile.step}) Send and wait for pastiche.`;
           break;
         default:
           break;
