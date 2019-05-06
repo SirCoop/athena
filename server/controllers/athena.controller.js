@@ -69,6 +69,7 @@ const cleanUnwantedImages = () => {
     const path = `${fileLocation}/${item}`;
     try {
       const stat = fs.lstatSync(path);
+      // if file then remove
       if (!stat.isDirectory()) {
         console.log('Removing: ', item);
         fs.removeSync(path)
@@ -187,9 +188,11 @@ function configurePythonProcess(jobInfo) {
   createOutputDirectory(userDirectory);
   // intensity range: 1-100 => max iterations = 400;
   console.log('iterations: ', intensity);
-  // round intensity to nearest ten for logging purposes
-  const roundedIterations = Math.ceil(intensity / 10) * 10;
-  const iterations = Math.round(roundedIterations * 4);
+  // convert float to int
+  const convertedIntensity = Math.floor(intensity);
+  // an odd number multiplied by an even number results in an even number
+  // python logger only outputs on iterations divisible by 10
+  const iterations = Math.round(convertedIntensity * 4);
   console.log('Num Iterations = ', iterations);
   // call neural style transfer algorithm
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
