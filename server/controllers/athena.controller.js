@@ -22,12 +22,12 @@ const fileLocation = path.resolve(__dirname, '../../python/athena_package/user_i
 */
 export function saveContentImage(req, res) {
   const { file } = req;
-  const userHasExistingImages = checkForExistingImage('content', req.body);
-  if (userHasExistingImages) {
+  const userHasJobPending = checkCurrentJobStatus(req.body);
+  if (userHasJobPending) {
     res.status(200).json({message: 'Please wait until your current pastiche has been delivered before creating a new one.'});
     cleanUnwantedImages();
   }
-  if (file.filename && file.size > 0 && !userHasExistingImages) {
+  if (file.filename && file.size > 0 && !userHasJobPending) {
     moveContentImage(req.body);
     res.status(200).end();
   } else {
@@ -37,12 +37,12 @@ export function saveContentImage(req, res) {
 
 export function saveStyleImage(req, res) {
   const { file } = req;
-  const userHasExistingImages = checkForExistingImage('style', req.body);
-  if (userHasExistingImages) {
+  const userHasJobPending = checkCurrentJobStatus(req.body);
+  if (userHasJobPending) {
     res.status(200).json({message: 'Please wait until your current pastiche has been delivered before creating a new one.'});
     cleanUnwantedImages();
   }
-  if (file.filename && file.size > 0 && !userHasExistingImages) {
+  if (file.filename && file.size > 0 && !userHasJobPending) {
     moveStyleImage(req.body);
     res.status(200).end();
   } else {
@@ -65,6 +65,7 @@ export function saveStyleImage(req, res) {
 const cleanUnwantedImages = () => {
   const contents = fs.readdirSync(fileLocation);
   contents.forEach((item) => {
+    console.log('cleaning: ', item);
     const path = `${fileLocation}/${item}`;
     try {
       const stat = fs.lstatSync(path);
@@ -78,16 +79,20 @@ const cleanUnwantedImages = () => {
   });
 };
 
-const checkForExistingImage = (imageDirectory, postBody) => {
+const checkCurrentJobStatus = (postBody) => {
   const { firstName, lastName, } = postBody;
-  const userDir = `${fileLocation}/${firstName}_${lastName}/${imageDirectory}`;
-  // does dir exist?
+  const userDir = `${fileLocation}/${firstName}_${lastName}/output`;
+  // if output directory exists, user has started job by clicking send
   try {
     fs.statSync(userDir);
+    return true;
   } catch(e) {
     // dir does not exist
     return false;
   }
+};
+
+const checkForExistingImage = (userDir) => {
   // does dir contain files?
   try {
     fs.readdirSync(userDir);
@@ -100,10 +105,21 @@ const checkForExistingImage = (imageDirectory, postBody) => {
 const moveContentImage = (postBody) => {
   const { firstName, lastName, email, fileName } = postBody;
   const tmpLocation = `${fileLocation}/${fileName}`;
-  const finalLocation = `${fileLocation}/${firstName}_${lastName}/content/${fileName}`;
-  // Sync:
+  const finalFileDir = `${fileLocation}/${firstName}_${lastName}/content`;
+  const finalFilePath = `${fileLocation}/${firstName}_${lastName}/content/${fileName}`;
+
+  // check content directory for existing image, if exists then overwrite with new image
   try {
-    fs.copySync(tmpLocation, finalLocation)
+    const hasImage = checkForExistingImage(finalFileDir);
+    if(hasImage) {
+      fs.emptyDirSync(finalFileDir);
+    }
+  } catch (error) {
+    console.error('Error removing existing content image: ', error);
+  }
+  
+  try {
+    fs.copySync(tmpLocation, finalFilePath)
     console.log('success - copy content file!');
     removeFile(tmpLocation);
   } catch (err) {
@@ -114,10 +130,21 @@ const moveContentImage = (postBody) => {
 const moveStyleImage = (postBody) => {
   const { firstName, lastName, email, fileName } = postBody;
   const tmpLocation = `${fileLocation}/${fileName}`;
-  const finalLocation = `${fileLocation}/${firstName}_${lastName}/style/${fileName}`;
-  // Sync:
+  const finalFileDir = `${fileLocation}/${firstName}_${lastName}/style`;
+  const finalFilePath = `${fileLocation}/${firstName}_${lastName}/style/${fileName}`;
+
+  // check content directory for existing image, if exists then overwrite with new image
   try {
-    fs.copySync(tmpLocation, finalLocation)
+    const hasImage = checkForExistingImage(finalFileDir);
+    if(hasImage) {
+      fs.emptyDirSync(finalFileDir);
+    }
+  } catch (error) {
+    console.error('Error removing existing style image: ', error);
+  }
+
+  try {
+    fs.copySync(tmpLocation, finalFilePath)
     console.log('success - copy style file!');
     removeFile(tmpLocation);
   } catch (err) {
@@ -143,11 +170,26 @@ export function startAthena(req, res) {
   }
 };
 
+function createOutputDirectory(userDirectory) {
+  const outputDirectory = path.resolve(`${baseDirectory}`, `./user_images/${userDirectory}/output`);
+
+  // create output directory for pastiche
+  try {
+    fs.mkdirSync(outputDirectory);
+    console.log('Output directory created!');
+  } catch (err) {
+    console.log('Error making output directory: ', err);
+  }
+}
 
 function configurePythonProcess(jobInfo) {
   const { userDirectory, contentImage, styleImage, email, intensity } = jobInfo;
+  createOutputDirectory(userDirectory);
   // intensity range: 1-100 => max iterations = 400;
-  const iterations = Math.round(intensity * 4);
+  console.log('iterations: ', intensity);
+  // round intensity to nearest ten for logging purposes
+  const roundedIterations = Math.ceil(intensity / 10) * 10;
+  const iterations = Math.round(roundedIterations * 4);
   console.log('Num Iterations = ', iterations);
   // call neural style transfer algorithm
   const pathToModel = path.resolve(`${baseDirectory}`, './neural_style_transfer_tf_eager.py');
@@ -203,14 +245,16 @@ function spawnPythonProcess(config, emailDetails) {
 
   let pyshell = new PythonShell(pathToModel, options);
 
-  pyshell.on('error', function (err) {
+  pyshell.on('error', (err) => {
     // handle stderr (a line of text from stderr)
     emailDetails.errorMessage = err;
     sendErrorEmail(emailDetails);
+    // clean up directory so the user can try again
+    console.log('OPTS: ', options);
   });
   
   // end the input stream and allow the process to exit
-  pyshell.end(function (err,code) {
+  pyshell.end((err,code) => {
     console.log('The exit:');
     console.log('code: ', code);
     if (code === 0)  {
